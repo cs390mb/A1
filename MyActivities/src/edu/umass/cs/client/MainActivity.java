@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -45,7 +46,8 @@ public class MainActivity extends Activity {
 	 * Various UI components 
 	 */
 	private TextView accelXView, accelYView, accelZView;
-	private TextView statusView, stepsView, activityView;
+	private TextView statusView, stepsView;
+	private ImageView activityView;
 	private CompoundButton accelButton;
 	private Button vizButton;
 
@@ -75,7 +77,8 @@ public class MainActivity extends Activity {
 				//String activity = msg.getData().getString("activity");
 				//TODO: Display activity in UI
 				String activity = (String) msg.obj;
-				activityView.setText(""+activity);
+				//activityView.setText(""+activity);
+            	setImage(activity);
 				break;
 			}
 			case Context_Service.MSG_STEP_COUNTER:
@@ -153,7 +156,7 @@ public class MainActivity extends Activity {
 		//Setting up text views
 		statusView = (TextView) findViewById(R.id.StatusView);
 		stepsView = (TextView) findViewById(R.id.StepCountView);
-		activityView = (TextView) findViewById(R.id.ActivityView);
+		activityView = (ImageView) findViewById(R.id.ActivityImageView);
 		accelXView = (TextView) findViewById(R.id.AccelXView);
 		accelYView = (TextView) findViewById(R.id.AccelYView);
 		accelZView = (TextView) findViewById(R.id.AccelZView);
@@ -246,8 +249,19 @@ public class MainActivity extends Activity {
 		accelZView.setText(text);
 	}
 
-
-
+    /**
+     * Display Activity Image
+     * @param label
+     */
+    public void setImage(String label){
+    	ImageView image = activityView;
+    	if(label.equals("stationary"))
+    		image.setImageResource(R.drawable.standing);
+    	else if(label.equals("walking"))
+    		image.setImageResource(R.drawable.walking);
+    	else if(label.equals("jumping"))
+    		image.setImageResource(R.drawable.jumping);
+    }
 
 	@Override
 	public void onBackPressed() {

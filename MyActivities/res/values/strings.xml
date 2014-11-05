@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Activities</string>
+    <string name="walk">Walking</string>
+    <string name="stat">Stationary</string>
+    <string name="jump">Jumping</string>
     <!-- Strings shown in UI  -->  
     <string name="status">Status</string>
     <string name="accel">Accelerometer</string>

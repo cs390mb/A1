@@ -163,11 +163,11 @@ public class ContextActivity extends ListActivity {
     }
     
     private int getStateFromActivityString(String label){
-    	if(label.equals("STATIONARY"))
+    	if(label.equals("walking"))
     		return 0;
-    	else if(label.equals("WALKING"))
+    	else if(label.equals("stationary"))
     		return 1;
-    	else if(label.equals("DRIVE"))
+    	else if(label.equals("jumping"))
     		return 2;
     	return -1;
     }
