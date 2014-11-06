@@ -1,0 +1,5 @@
+package edu.umass.cs.client.widget;
+
+public class graphView extends WidgetBase {
+
+}
