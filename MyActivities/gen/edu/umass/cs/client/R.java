@@ -21,8 +21,8 @@ public final class R {
         public static final int AccelXView=0x7f06000b;
         public static final int AccelYView=0x7f06000d;
         public static final int AccelZView=0x7f06000f;
+        public static final int ActivityImageView=0x7f060006;
         public static final int ActivityLayout=0x7f060005;
-        public static final int ActivityView=0x7f060006;
         public static final int StartButton=0x7f060002;
         public static final int StartButtonLayout=0x7f060001;
         public static final int StatusLayout=0x7f060007;
@@ -36,6 +36,7 @@ public final class R {
         public static final int YView=0x7f06000c;
         public static final int ZView=0x7f06000e;
         public static final int action_pick=0x7f060012;
+        public static final int layout=0x7f060013;
     }
     public static final class layout {
         public static final int main=0x7f030000;
@@ -44,18 +45,21 @@ public final class R {
         public static final int context_menu=0x7f050000;
     }
     public static final class string {
-        public static final int accel=0x7f040002;
-        public static final int action_pick=0x7f04000a;
-        public static final int activity=0x7f040008;
+        public static final int accel=0x7f040005;
+        public static final int action_pick=0x7f04000d;
+        public static final int activity=0x7f04000b;
         public static final int app_name=0x7f040000;
-        public static final int nullvalue=0x7f040004;
+        public static final int jump=0x7f040003;
+        public static final int nullvalue=0x7f040007;
+        public static final int stat=0x7f040002;
         /**  Strings shown in UI  
          */
-        public static final int status=0x7f040001;
-        public static final int steps=0x7f040003;
-        public static final int visualize=0x7f040009;
-        public static final int x=0x7f040005;
-        public static final int y=0x7f040006;
-        public static final int z=0x7f040007;
+        public static final int status=0x7f040004;
+        public static final int steps=0x7f040006;
+        public static final int visualize=0x7f04000c;
+        public static final int walk=0x7f040001;
+        public static final int x=0x7f040008;
+        public static final int y=0x7f040009;
+        public static final int z=0x7f04000a;
     }
 }

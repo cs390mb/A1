@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="edu.umass.cs.client.widget.ContextImageWidget"/>
+<fullyQualifiedTypeName name="edu.umass.cs.client.widget.WidgetBase"/>
+<fullyQualifiedTypeName name="android.widget.LinearLayout"/>
+<fullyQualifiedTypeName name="com.jjoe64.graphview.GraphViewSeries"/>
+<fullyQualifiedTypeName name="com.jjoe64.graphview.GraphView"/>
+<fullyQualifiedTypeName name="com.jjoe64.graphview.LineGraphView"/>
+<fullyQualifiedTypeName name="android.widget.RelativeLayout"/>
+<fullyQualifiedTypeName name="android.graphics.Color"/>
+<fullyQualifiedTypeName name="com.jjoe64.graphview.GraphViewDataInterface"/>
+</qualifiedTypeNameHistroy>

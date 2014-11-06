@@ -1,11 +1,19 @@
 package edu.umass.cs.client;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewDataInterface;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,7 +25,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -45,9 +55,12 @@ public class MainActivity extends Activity {
 	 * Various UI components 
 	 */
 	private TextView accelXView, accelYView, accelZView;
-	private TextView statusView, stepsView, activityView;
+	private TextView statusView, stepsView;
+	private ImageView activityView;
 	private CompoundButton accelButton;
 	private Button vizButton;
+	private GraphViewSeries x, y, z;
+	private int counter = 151;
 
 	/**
 	 * Messenger service for exchanging messages with the background service
@@ -67,6 +80,7 @@ public class MainActivity extends Activity {
 	 */
 	@SuppressLint("HandlerLeak")
 	class IncomingHandler extends Handler {
+		@SuppressWarnings("deprecation")
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -75,7 +89,8 @@ public class MainActivity extends Activity {
 				//String activity = msg.getData().getString("activity");
 				//TODO: Display activity in UI
 				String activity = (String) msg.obj;
-				activityView.setText(""+activity);
+				//activityView.setText(""+activity);
+            	setImage(activity);
 				break;
 			}
 			case Context_Service.MSG_STEP_COUNTER:
@@ -89,6 +104,10 @@ public class MainActivity extends Activity {
 				float accY = msg.getData().getFloat("accy");
 				float accZ = msg.getData().getFloat("accz");
 				activity.setAccelValues(accX,accY,accZ);
+				x.appendData(new GraphViewData(counter, accX), true);
+				y.appendData(new GraphViewData(counter, accY), true);
+				z.appendData(new GraphViewData(counter, accZ), true);
+				counter++;
 				break;
 			}
 			case Context_Service.MSG_ACCELEROMETER_STARTED:
@@ -153,7 +172,7 @@ public class MainActivity extends Activity {
 		//Setting up text views
 		statusView = (TextView) findViewById(R.id.StatusView);
 		stepsView = (TextView) findViewById(R.id.StepCountView);
-		activityView = (TextView) findViewById(R.id.ActivityView);
+		activityView = (ImageView) findViewById(R.id.ActivityImageView);
 		accelXView = (TextView) findViewById(R.id.AccelXView);
 		accelYView = (TextView) findViewById(R.id.AccelYView);
 		accelZView = (TextView) findViewById(R.id.AccelZView);
@@ -199,6 +218,72 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		}); 
+		/** Initial graph, most simple graph 
+         * 
+         */
+//        GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {  
+//        	      new GraphViewData(0, 0),
+//        	      new GraphViewData(1, 0),
+//        	      new GraphViewData(2, 0),
+//        	});  
+//        	  
+//        	GraphView graphView = new LineGraphView(  
+//        	      this // context  
+//        	      , "Job Status Graph" // heading  
+//        	);  
+//        	graphView.addSeries(exampleSeries); // data  
+//        	  
+//        	RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);  
+//        	layout.addView(graphView);  
+		// first init data
+		// sin curve
+		int num = 150;
+		GraphViewData[] data = new GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.sin(v));
+		}
+		x = new GraphViewSeries("X", new GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), data);
+		 
+		// cos curve
+		data = new GraphViewData[num];
+		v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.cos(v));
+		}
+		y = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data);
+		 
+		// random curve
+		num = 150;
+		data = new GraphViewData[num];
+		v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.sin(Math.random()*v));
+		}
+		z = new GraphViewSeries("Z", null, data);
+		 
+		/*
+		 * create graph
+		 */
+		GraphView graphView = new LineGraphView(
+		    this
+		    , "GraphViewDemo"
+		);
+		// add data
+		graphView.addSeries(x);
+		graphView.addSeries(y);
+		graphView.addSeries(z);
+		// optional - set view port, start=2, size=10
+		graphView.setViewPort(2, 10);
+		graphView.setScalable(true);
+		// optional - legend
+		graphView.setShowLegend(true);
+		 
+		RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);
+		layout.addView(graphView);
 	}
 
 	/**
@@ -246,8 +331,19 @@ public class MainActivity extends Activity {
 		accelZView.setText(text);
 	}
 
-
-
+    /**
+     * Display Activity Image
+     * @param label
+     */
+    public void setImage(String label){
+    	ImageView image = activityView;
+    	if(label.equals("stationary"))
+    		image.setImageResource(R.drawable.standing);
+    	else if(label.equals("walking"))
+    		image.setImageResource(R.drawable.walking);
+    	else if(label.equals("jumping"))
+    		image.setImageResource(R.drawable.jumping);
+    }
 
 	@Override
 	public void onBackPressed() {
