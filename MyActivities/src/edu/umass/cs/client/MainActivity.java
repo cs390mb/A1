@@ -202,25 +202,6 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		}); 
-		/** Initial graph, most simple graph 
-         * 
-         */
-//        GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {  
-//        	      new GraphViewData(0, 0),
-//        	      new GraphViewData(1, 0),
-//        	      new GraphViewData(2, 0),
-//        	});  
-//        	  
-//        	GraphView graphView = new LineGraphView(  
-//        	      this // context  
-//        	      , "Job Status Graph" // heading  
-//        	);  
-//        	graphView.addSeries(exampleSeries); // data  
-//        	  
-//        	RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);  
-//        	layout.addView(graphView);  
-		// first init data
-		// sin curve
 	}
 
 	/**
