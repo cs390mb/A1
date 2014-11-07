@@ -245,16 +245,15 @@
         android:text="@string/visualize"
         android:textSize="20sp"
         android:textStyle="bold" />
-    
-    <RelativeLayout
-        android:id="@+id/layout"
+	<RelativeLayout
+        android:id="@+id/graph1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dip"
         android:layout_below="@id/action_pick"
         android:layout_centerHorizontal="true"
         android:background="#ffffff"
         android:orientation="horizontal"
         android:padding="5dip" >
     </RelativeLayout>
-
+    
 </RelativeLayout>

@@ -1,0 +1,132 @@
+package edu.umass.cs.client.widget;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewDataInterface;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import android.view.ViewGroup;
+import android.view.View.MeasureSpec;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.Log;
+import java.util.LinkedList;
+
+import edu.umass.cs.client.R;
+import edu.umass.cs.client.widget.ContextImageWidget.RollingHistoryView;
+
+/**
+ * ContextImageWidget.java
+ * @author musthag
+ */
+public class GraphViewWidget extends ContextImageWidget
+{
+	private float min = Integer.MAX_VALUE;
+	private float max = Integer.MIN_VALUE;
+	private GraphViewSeries x, y, z;
+	private int counter = 151;
+	protected int height = 0;
+	public GraphViewWidget(Context context, float min, float max, int height, LinkedList<Float> history) {
+		super(context);
+    	drawContainer();
+    	drawImage();
+    	this.min =min;
+    	this.max = max;
+    	this.height = height;
+    	drawHistory(history);
+	}
+	
+	@Override
+	protected void drawHistory(LinkedList history){
+		int num = 150;
+		GraphViewData[] data = new GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.sin(v));
+		}
+		x = new GraphViewSeries("X", new GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), data);
+		 
+		// cos curve
+		data = new GraphViewData[num];
+		v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.cos(v));
+		}
+		y = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data);
+		 
+		// random curve
+		num = 150;
+		data = new GraphViewData[num];
+		v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.sin(Math.random()*v));
+		}
+		z = new GraphViewSeries("Z", null, data);
+		 
+		/*
+		 * create graph
+		 */
+		GraphView graphView = new LineGraphView(
+		    context
+		    , "GraphViewDemo"
+		);
+		// add data
+		graphView.addSeries(x);
+		graphView.addSeries(y);
+		graphView.addSeries(z);
+		// optional - set view port, start=2, size=10
+		graphView.setViewPort(2, 10);
+		graphView.setScalable(true);
+		// optional - legend
+		graphView.setShowLegend(true);
+		 
+		this.addView(graphView);
+	}
+	public class ContinuousRollingHistoryView extends RollingHistoryView{
+		private final String TAG = "CCRolling";
+		
+		public ContinuousRollingHistoryView(Context context) {
+			super(context);
+		}
+
+    	@Override
+        public void onDraw(Canvas canvas) {
+//    		Log.d("CONTINUOUSROLLING","called");
+    		int xoffset =parentWidth/SIZE/2;
+    		int prevX = -1;
+    		float prevY= -1;
+    		for(Object state : history){
+    			float value = (Float)state;
+    			float y = height - (value - min)/(max-min)*height;
+                canvas.drawCircle(xoffset,y,DOT,paint);
+                if (prevX >0  && prevY >0){
+                	canvas.drawLine(prevX, prevY, xoffset, y, paint);
+                }
+//                Log.d(TAG,"x:" + xoffset + " y:" + y + " pW: " + parentWidth);
+                prevX = xoffset;
+            	prevY = y;
+                xoffset+=parentWidth/SIZE;
+    		}
+        }
+    	@Override
+    	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec){
+//    		Log.d("HISTORY", "MEASURING MEASURING MEASURING MEASURING MEASURING MEASURING MEASURING MEASURING MEASURING ");
+    		parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+    		int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+//    		Log.d("ROLING", "Measured is : " + parentWidth + " height: " + parentHeight);
+    		setMeasuredDimension(widthMeasureSpec,height);
+    	}
+    	
+    }
+}

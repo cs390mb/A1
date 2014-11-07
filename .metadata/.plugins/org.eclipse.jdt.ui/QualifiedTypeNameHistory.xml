@@ -2,11 +2,13 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="edu.umass.cs.client.widget.ContextImageWidget"/>
 <fullyQualifiedTypeName name="edu.umass.cs.client.widget.WidgetBase"/>
-<fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="com.jjoe64.graphview.GraphViewSeries"/>
 <fullyQualifiedTypeName name="com.jjoe64.graphview.GraphView"/>
 <fullyQualifiedTypeName name="com.jjoe64.graphview.LineGraphView"/>
 <fullyQualifiedTypeName name="android.widget.RelativeLayout"/>
 <fullyQualifiedTypeName name="android.graphics.Color"/>
 <fullyQualifiedTypeName name="com.jjoe64.graphview.GraphViewDataInterface"/>
+<fullyQualifiedTypeName name="android.widget.LinearLayout"/>
+<fullyQualifiedTypeName name="android.view.Menu"/>
+<fullyQualifiedTypeName name="android.view.MenuItem"/>
 </qualifiedTypeNameHistroy>

@@ -17,6 +17,7 @@
 package edu.umass.cs.client;
 
 import java.util.LinkedList;
+
 import java.util.List;
 
 import com.jjoe64.graphview.GraphView;
@@ -50,7 +51,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 public class ContextActivity extends ListActivity {
 	
@@ -103,7 +104,8 @@ public class ContextActivity extends ListActivity {
     
     @SuppressLint("HandlerLeak")
 	class IncomingHandler extends Handler {
-        @Override
+        @SuppressWarnings("deprecation")
+		@Override
         public void handleMessage(Message msg) {
         	if (widgets ==null) return;
             switch (msg.what) {
@@ -125,6 +127,10 @@ public class ContextActivity extends ListActivity {
 	            	float accX = msg.getData().getFloat("accx");
 	            	float accY = msg.getData().getFloat("accy");
 	            	float accZ = msg.getData().getFloat("accz");
+	            	x.appendData(new GraphViewData(counter, accX), true);
+					y.appendData(new GraphViewData(counter, accY), true);
+					z.appendData(new GraphViewData(counter, accZ), true);
+					counter++;
 	            	if (widgets[STREAMS.ACCX.ordinal()] !=null){
 	            		((ContextImageWidget)widgets[STREAMS.ACCX.ordinal()]).history_view.add(accX);
 	            	}
@@ -188,9 +194,53 @@ public class ContextActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setListAdapter(null);
-        
-//        View view = this.getWindow().getDecorView();
-//        view.setBackgroundColor(Color.WHITE);
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.WHITE);
+        int num = 150;
+		GraphViewData[] data = new GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.sin(v));
+		}
+		x = new GraphViewSeries("X", new GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), data);
+		 
+		// cos curve
+		data = new GraphViewData[num];
+		v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.cos(v));
+		}
+		y = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data);
+		 
+		// random curve
+		num = 150;
+		data = new GraphViewData[num];
+		v=0;
+		for (int i=0; i<num; i++) {
+		  v += 0.2;
+		  data[i] = new GraphViewData(i, Math.sin(Math.random()*v));
+		}
+		z = new GraphViewSeries("Z", null, data);
+		 
+		/*
+		 * create graph
+		 */
+		GraphView graphView = new LineGraphView(
+		    this
+		    , "GraphViewDemo"
+		);
+		// add data
+		graphView.addSeries(x);
+		graphView.addSeries(y);
+		graphView.addSeries(z);
+		// optional - set view port, start=2, size=10
+		graphView.setViewPort(2, 10);
+		graphView.setScalable(true);
+		// optional - legend
+		graphView.setShowLegend(true);
+		((ViewGroup) view).addView(graphView);
     }
     
     
