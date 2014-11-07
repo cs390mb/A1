@@ -401,7 +401,7 @@ public class ContextActivity extends ListActivity {
 				display3.getSize(size3);
 				int width3 = size3.x;
 				int height3 = size3.y;
-				graphView3.setY(800);
+				graphView3.setY(950);
 				graphView3.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
 				graphView3.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
 				graphView3.setLayoutParams(new LayoutParams(width3, height3/4));

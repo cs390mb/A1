@@ -80,10 +80,9 @@ public class ContextActivity extends ListActivity {
 	private boolean mIsBound;
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-	private GraphViewSeries x, y, z, x1, y1;
+	private GraphViewSeries x, y, z, x1;
 	private int counter = 151;
 	private int counter1 = 151;
-	private int counter2 = 151;
 
 
 	// Connection with the service
@@ -148,7 +147,7 @@ public class ContextActivity extends ListActivity {
 
 				}
 				try {
-					y1.appendData(new GraphViewData(counter2, accY), true);
+					y1.appendData(new GraphViewData(counter2, accX), true);
 					counter2++;
 				} catch (NullPointerException e) {
 
@@ -378,7 +377,7 @@ public class ContextActivity extends ListActivity {
 					v3 += 0.2;
 					data3[i] = new GraphViewData(i, Math.sin(v3));
 				}
-				y1 = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data3);
+				y2 = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), data3);
 
 				/*
 				 * create graph
@@ -388,7 +387,7 @@ public class ContextActivity extends ListActivity {
 						, "GraphViewDemo"
 						);
 				// add data
-				graphView3.addSeries(y1);
+				graphView3.addSeries(x1);
 				// optional - set view port, start=2, size=10
 				graphView3.setViewPort(2, 10);
 				graphView3.setScalable(true);
@@ -398,13 +397,13 @@ public class ContextActivity extends ListActivity {
 				// Get screen size
 				Display display3 = getWindowManager().getDefaultDisplay();
 				Point size3 = new Point();
-				display3.getSize(size3);
+				display3.getSize(size2);
 				int width3 = size3.x;
 				int height3 = size3.y;
-				graphView3.setY(800);
+				graphView3.setY(500);
 				graphView3.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
 				graphView3.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-				graphView3.setLayoutParams(new LayoutParams(width3, height3/4));
+				graphView3.setLayoutParams(new LayoutParams(width2, height2/4));
 				((ViewGroup) view3).addView(graphView3);
 				break;
 			}
