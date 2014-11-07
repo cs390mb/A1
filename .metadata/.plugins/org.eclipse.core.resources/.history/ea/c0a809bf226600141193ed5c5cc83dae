@@ -83,8 +83,12 @@ public class ContextActivity extends ListActivity {
 	private boolean mIsBound;
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-	private GraphViewSeries x, y, z;
+	private GraphViewSeries x, y, z, barSeries;
 	private int counter = 151;
+	private float walkingCount = 0;
+	private float stationaryCount = 0;
+	private float jumpingCount = 0;
+
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {

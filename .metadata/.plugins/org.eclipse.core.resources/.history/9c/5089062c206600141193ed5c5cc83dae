@@ -20,7 +20,6 @@ import java.util.LinkedList;
 
 import java.util.List;
 
-import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -83,8 +82,11 @@ public class ContextActivity extends ListActivity {
 	private boolean mIsBound;
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-	private GraphViewSeries x, y, z;
+	private GraphViewSeries x, y, z, x1, y1;
 	private int counter = 151;
+	private int counter1 = 151;
+	private int counter2 = 151;
+
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -141,6 +143,18 @@ public class ContextActivity extends ListActivity {
 				} catch (NullPointerException e) {
 
 				}
+				try {
+					x1.appendData(new GraphViewData(counter1, accX), true);
+					counter1++;
+				} catch (NullPointerException e) {
+
+				}
+				try {
+					y1.appendData(new GraphViewData(counter2, accY), true);
+					counter2++;
+				} catch (NullPointerException e) {
+
+				}
 				if (widgets[STREAMS.ACCX.ordinal()] !=null){
 					((ContextImageWidget)widgets[STREAMS.ACCX.ordinal()]).history_view.add(accX);
 				}
@@ -188,17 +202,13 @@ public class ContextActivity extends ListActivity {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private int getStateFromActivityString(String label){
-		if(label.equals("walking")) {
+		if(label.equals("walking"))
 			return 0;
-		}
-		else if(label.equals("stationary")) {
+		else if(label.equals("stationary"))
 			return 1;
-		}
-		else if(label.equals("jumping")) {
+		else if(label.equals("jumping"))
 			return 2;
-		}
 		return -1;
 	}
 
@@ -221,6 +231,7 @@ public class ContextActivity extends ListActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+
 		//Bind to the service if it is already running
 		bindToServiceIfIsRunning();
 		if(Context_Service.selected.size() > 0){
@@ -318,6 +329,21 @@ public class ContextActivity extends ListActivity {
 				widgets[m].addOrRemoveTitleViewAsNecessary();
 				View view2 = this.getWindow().getDecorView();
 				view2.setBackgroundColor(Color.BLACK);
+				// init example series data
+				GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {
+				    new GraphViewData(1, 2.0d)
+				    , new GraphViewData(2, 1.5d)
+				    , new GraphViewData(3, 2.5d)
+				    , new GraphViewData(4, 1.0d)
+				});
+				 
+				GraphView graphView2 = new LineGraphView(
+				    this // context
+				    , "GraphViewDemo" // heading
+				);
+				graphView2.addSeries(exampleSeries); // data
+				 
+				((ViewGroup) view2).addView(graphView2);
 				break;
 			case ACCZ:
 				if (Context_Service.accz_history == null) 
@@ -325,6 +351,43 @@ public class ContextActivity extends ListActivity {
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accz_history);
 				widgets[m].setTitle(STREAMS.ACCZ.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
+				View view3 = this.getWindow().getDecorView();
+				view3.setBackgroundColor(Color.BLACK);
+				int num3 = 150;
+				GraphViewData[] data3 = new GraphViewData[num3];
+				double v3=0;
+				for (int i=0; i<num3; i++) {
+					v3 += 0.2;
+					data3[i] = new GraphViewData(i, Math.sin(v3));
+				}
+				y1 = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data3);
+
+				/*
+				 * create graph
+				 */
+				GraphView graphView3 = new LineGraphView(
+						this
+						, "GraphViewDemo"
+						);
+				// add data
+				graphView3.addSeries(y1);
+				// optional - set view port, start=2, size=10
+				graphView3.setViewPort(2, 10);
+				graphView3.setScalable(true);
+				// optional - legend
+				graphView3.setShowLegend(true);
+				
+				// Get screen size
+				Display display3 = getWindowManager().getDefaultDisplay();
+				Point size3 = new Point();
+				display3.getSize(size3);
+				int width3 = size3.x;
+				int height3 = size3.y;
+				graphView3.setY(800);
+				graphView3.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
+				graphView3.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
+				graphView3.setLayoutParams(new LayoutParams(width3, height3/4));
+				((ViewGroup) view3).addView(graphView3);
 				break;
 			}
 		}

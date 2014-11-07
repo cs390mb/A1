@@ -83,8 +83,14 @@ public class ContextActivity extends ListActivity {
 	private boolean mIsBound;
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-	private GraphViewSeries x, y, z;
+	private GraphViewSeries x, y, z, barSeries;
 	private int counter = 151;
+	private int counter1 = 151;
+	private int counter2 = 151;
+	private int walkingCount = 0;
+	private int stationaryCount = 0;
+	private int jumpingCount = 0;
+
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -188,9 +194,9 @@ public class ContextActivity extends ListActivity {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private int getStateFromActivityString(String label){
 		if(label.equals("walking")) {
+			barSeries.appendData(walkingCount, true);
 			return 0;
 		}
 		else if(label.equals("stationary")) {
@@ -318,6 +324,29 @@ public class ContextActivity extends ListActivity {
 				widgets[m].addOrRemoveTitleViewAsNecessary();
 				View view2 = this.getWindow().getDecorView();
 				view2.setBackgroundColor(Color.BLACK);
+				// init example series data
+				barSeries = new GraphViewSeries(new GraphViewData[] {
+				    new GraphViewData(1, walkingCount)
+				    , new GraphViewData(2, stationaryCount)
+				    , new GraphViewData(3, jumpingCount)
+				});
+				 
+				GraphView graphView2 = new BarGraphView(
+				    this // context
+				    , "GraphViewDemo" // heading
+				);
+				graphView2.addSeries(barSeries); // data
+				// Get screen size
+				Display display3 = getWindowManager().getDefaultDisplay();
+				Point size3 = new Point();
+				display3.getSize(size3);
+				int width3 = size3.x;
+				int height3 = size3.y;
+				graphView2.setY(500);
+				graphView2.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
+				graphView2.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
+				graphView2.setLayoutParams(new LayoutParams(width3, height3/4));
+				((ViewGroup) view2).addView(graphView2);
 				break;
 			case ACCZ:
 				if (Context_Service.accz_history == null) 

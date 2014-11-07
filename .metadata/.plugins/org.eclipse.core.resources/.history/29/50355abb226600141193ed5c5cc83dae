@@ -83,8 +83,12 @@ public class ContextActivity extends ListActivity {
 	private boolean mIsBound;
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-	private GraphViewSeries x, y, z;
+	private GraphViewSeries x, y, z, barSeries;
 	private int counter = 151;
+	private float walkingCount = 0;
+	private float stationaryCount = 0;
+	private float jumpingCount = 0;
+
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -191,12 +195,18 @@ public class ContextActivity extends ListActivity {
 	@SuppressWarnings("deprecation")
 	private int getStateFromActivityString(String label){
 		if(label.equals("walking")) {
+			walkingCount++;
+			barSeries.appendData(new GraphViewData(1, walkingCount), true);
 			return 0;
 		}
 		else if(label.equals("stationary")) {
+			stationaryCount++;
+			barSeries.appendData(new GraphViewData(2, stationaryCount), true);
 			return 1;
 		}
 		else if(label.equals("jumping")) {
+			jumpingCount++;
+			barSeries.appendData(new GraphViewData(3, jumpingCount), true);
 			return 2;
 		}
 		return -1;
