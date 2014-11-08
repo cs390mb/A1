@@ -17,18 +17,17 @@
 package edu.umass.cs.client;
 
 import java.text.DecimalFormat;
+
 import java.util.LinkedList;
 
 import java.util.List;
 
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.ValueDependentColor;
 
 import edu.umass.cs.client.widget.ContinuousContextImageWidget;
 import edu.umass.cs.client.widget.ContextImageWidget;
@@ -41,7 +40,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -58,19 +56,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewParent;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ContextActivity extends ListActivity {
 
-	public static enum STREAMS {ACTIVITY
+	public static enum STREAMS {REALTIME
 		//									,VOICE
-		,ACCX
-		,ACCY
-		,ACCZ
+		,PERCENTAGE
+		,PERCENTAGEBAR
 	};
 	private WidgetBase[] widgets = new WidgetBase[STREAMS.values().length];
 
@@ -90,9 +84,11 @@ public class ContextActivity extends ListActivity {
 	private GraphViewSeries x, y, z;
 	private String w, s, j;
 	private int counter = 151;
-	private boolean created = false;
+	private boolean created, createdBar = false;
 	private TextView textViewx1 = null;
 	private double walking, stationary, jumping = 0;
+	private GraphViewSeries barGraphSeries;
+	private GraphView barGraphView;
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -125,7 +121,6 @@ public class ContextActivity extends ListActivity {
 			case Context_Service.MSG_ACTIVITY_STATUS:
 			{
 				Log.d(TAG,"got message");
-				//String activity = msg.getData().getString("activity");
 				String activity = (String) msg.obj;
 				addActivityTotal(activity);
 				w = getPercentageActivity(walking);
@@ -133,12 +128,19 @@ public class ContextActivity extends ListActivity {
 				j = getPercentageActivity(jumping);
 				Log.d(TAG,walking + " " + stationary + " " + jumping);
 				Log.d(TAG, w + " " + s + " " + j);
-				String totalString = "Walking: " + w + "% Jumping: " + j + "% Stationary: " + s + "%";
-				setText(totalString);
+				String totalString = "Walking: " + w + "% Stationary: " + s + "% Jumping: " + j + "%";
+				try {
+					setText(totalString);
+				} catch (NullPointerException m) {
+				}
+				try {
+					setBars(); 
+				} catch (NullPointerException k) {
+				}
 				int state = getStateFromActivityString(activity);
-				if (widgets[STREAMS.ACTIVITY.ordinal()] !=null) {
-					((ContextImageWidget)widgets[STREAMS.ACTIVITY.ordinal()]).history_view.add(state);
-					((ContextImageWidget)widgets[STREAMS.ACTIVITY.ordinal()]).setImage(state);
+				if (widgets[STREAMS.REALTIME.ordinal()] !=null) {
+					((ContextImageWidget)widgets[STREAMS.REALTIME.ordinal()]).history_view.add(state);
+					((ContextImageWidget)widgets[STREAMS.REALTIME.ordinal()]).setImage(state);
 				}
 				break;
 			}
@@ -153,16 +155,19 @@ public class ContextActivity extends ListActivity {
 					z.appendData(new GraphViewData(counter, accZ), true);
 					counter++;
 				} catch (NullPointerException e) {
-
 				}
-				if (widgets[STREAMS.ACCX.ordinal()] !=null){
-					((ContextImageWidget)widgets[STREAMS.ACCX.ordinal()]).history_view.add(accX);
+				try {
+					setBars();
+				} catch (NullPointerException k) {
 				}
-				if (widgets[STREAMS.ACCY.ordinal()] !=null){
-					((ContextImageWidget)widgets[STREAMS.ACCY.ordinal()]).history_view.add(accY);
+				if (widgets[STREAMS.PERCENTAGE.ordinal()] !=null){
+					((ContextImageWidget)widgets[STREAMS.PERCENTAGE.ordinal()]).history_view.add(accX);
 				}
-				if (widgets[STREAMS.ACCZ.ordinal()] !=null){
-					((ContextImageWidget)widgets[STREAMS.ACCZ.ordinal()]).history_view.add(accZ);
+				if (widgets[STREAMS.PERCENTAGE.ordinal()] !=null){
+					((ContextImageWidget)widgets[STREAMS.PERCENTAGE.ordinal()]).history_view.add(accY);
+				}
+				if (widgets[STREAMS.PERCENTAGE.ordinal()] !=null){
+					((ContextImageWidget)widgets[STREAMS.PERCENTAGE.ordinal()]).history_view.add(accZ);
 				}
 				break;
 			}
@@ -171,7 +176,7 @@ public class ContextActivity extends ListActivity {
 			}
 		}
 	}
-	
+
 	private String getPercentageActivity(double activity) {
 		DecimalFormat df = new DecimalFormat("#.#");
 		double result = (activity / (this.walking+this.stationary+this.jumping)) * 100;
@@ -256,10 +261,28 @@ public class ContextActivity extends ListActivity {
 			drawWidgets();
 		} 
 	}
-	
+
 	private void setText(String totalString) {
-		textViewx1.setText(totalString);
+		try {
+			textViewx1.setText(totalString);
+		} catch (NullPointerException e) {
+			return;
+		}
 		return;
+	}
+
+	private void setBars() {
+		try {
+			barGraphSeries = new GraphViewSeries(new GraphViewData[] {
+					new GraphViewData(1, Integer.parseInt(w))
+					, new GraphViewData(2, Integer.parseInt(s))
+					, new GraphViewData(3, Integer.parseInt(j))
+			});
+		} catch (NumberFormatException i) {
+
+		}
+		barGraphView.removeAllSeries();
+		barGraphView.addSeries(barGraphSeries);
 	}
 
 	private void drawWidgets(){
@@ -267,7 +290,7 @@ public class ContextActivity extends ListActivity {
 		for(int m : selected){
 			Log.d(TAG,"selected: " + m);
 			switch(STREAMS.values()[m]){
-			case ACTIVITY:
+			case REALTIME:
 				if (Context_Service.raw_activity_history == null) 
 					Context_Service.raw_activity_history = new LinkedList<Integer>();
 				widgets[m] = new ContextImageWidget(this,2,Context_Service.raw_activity_history);
@@ -281,19 +304,22 @@ public class ContextActivity extends ListActivity {
 					created = true;
 				}
 
-				String totalString = "Walking: " + w + "% Jumping: " + j + "% Stationary: " + s + "%";
+				String totalString = "Walking: " + w + "% Stationary: " + s + "% Jumping: " + j + "%";
 				Log.d(TAG,"activity:" + walking + stationary + jumping);
 				setText(totalString);
 				textViewx1.setTextColor(Color.RED);
 				textViewx1.setY(500);
 				((ViewGroup) view2).addView(textViewx1);
-
+				try {
+					setBars();
+				} catch (NullPointerException k) {
+				}
 				break;
-			case ACCX:
+			case PERCENTAGE:
 				if (Context_Service.accx_history == null) 
 					Context_Service.accx_history = new LinkedList<Float>();
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accx_history);
-				widgets[m].setTitle(STREAMS.ACCX.toString());
+				widgets[m].setTitle(STREAMS.PERCENTAGE.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
 
 				View view = this.getWindow().getDecorView();
@@ -355,20 +381,47 @@ public class ContextActivity extends ListActivity {
 				graphView.setLayoutParams(new LayoutParams(width, height/4));
 				((ViewGroup) view).addView(graphView);
 				break;
-			case ACCY:
+			case PERCENTAGEBAR:
 				if (Context_Service.accy_history == null) 
 					Context_Service.accy_history = new LinkedList<Float>();
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accy_history);
-				widgets[m].setTitle(STREAMS.ACCY.toString());
+				widgets[m].setTitle(STREAMS.PERCENTAGEBAR.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
 
-				break;
-			case ACCZ:
-				if (Context_Service.accz_history == null) 
-					Context_Service.accz_history = new LinkedList<Float>();
-				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accz_history);
-				widgets[m].setTitle(STREAMS.ACCZ.toString());
-				widgets[m].addOrRemoveTitleViewAsNecessary();
+				View view3 = this.getWindow().getDecorView();
+				view3.setBackgroundColor(Color.BLACK);
+				if (!createdBar) {
+					// init example series data
+					barGraphSeries = new GraphViewSeries(new GraphViewData[] {
+							new GraphViewData(1, 0)
+							, new GraphViewData(2, 0)
+							, new GraphViewData(3, 0)
+					});
+					barGraphView = new BarGraphView(
+							this // context
+							, "Activity Percentage Data" // heading
+							);
+					createdBar = true;
+				}
+				setBars();
+				barGraphView.setY(800);
+				// Get screen size
+				Display display2 = getWindowManager().getDefaultDisplay();
+				Point size2 = new Point();
+				display2.getSize(size2);
+				int width2 = size2.x;
+				int height2 = size2.y;
+				barGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
+				barGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
+				barGraphView.setManualYAxisBounds(100, 0);
+				String[] labels = new String[3];
+				labels[0] = "Walking";
+				labels[1] = "Stationary";
+				labels[2] = "Jumping";
+				barGraphView.setHorizontalLabels(labels);
+				barGraphView.setLayoutParams(new LayoutParams(width2, height2/4));
+				((ViewGroup) view3).addView(barGraphView);
+
 				break;
 			}
 		}
