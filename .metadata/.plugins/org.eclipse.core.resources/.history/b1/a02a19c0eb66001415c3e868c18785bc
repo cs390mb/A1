@@ -16,7 +16,6 @@
 
 package edu.umass.cs.client;
 
-import java.text.DecimalFormat;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -88,11 +87,10 @@ public class ContextActivity extends ListActivity {
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 	private GraphViewSeries x, y, z;
-	private String w, s, j;
+	private int w, s, j;
 	private int counter = 151;
 	private boolean created = false;
 	private TextView textViewx1 = null;
-	private double walking, stationary, jumping = 0;
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -115,6 +113,7 @@ public class ContextActivity extends ListActivity {
 		}
 	};
 
+
 	@SuppressLint("HandlerLeak")
 	class IncomingHandler extends Handler {
 		@SuppressWarnings("deprecation")
@@ -131,9 +130,7 @@ public class ContextActivity extends ListActivity {
 				w = getPercentageActivity(walking);
 				s = getPercentageActivity(stationary);
 				j = getPercentageActivity(jumping);
-				Log.d(TAG,walking + " " + stationary + " " + jumping);
-				Log.d(TAG, w + " " + s + " " + j);
-				String totalString = "Walking: " + w + "% Jumping: " + j + "% Stationary: " + s + "%";
+				String totalString = "Walking: " + w + "% Jumping: " + s + "% Stationary: " + stationary + "%";
 				setText(totalString);
 				int state = getStateFromActivityString(activity);
 				if (widgets[STREAMS.ACTIVITY.ordinal()] !=null) {
@@ -171,12 +168,6 @@ public class ContextActivity extends ListActivity {
 			}
 		}
 	}
-	
-	private String getPercentageActivity(double activity) {
-		DecimalFormat df = new DecimalFormat("#.#");
-		double result = (activity / (this.walking+this.stationary+this.jumping)) * 100;
-		return df.format(result);
-	}
 
 	/**
 	 * Binds this activity to the service if the service is already running
@@ -208,13 +199,18 @@ public class ContextActivity extends ListActivity {
 		}
 	}
 
+	private int walking, stationary, jumping = 0;
 	private void addActivityTotal(String activity) {
 		if(activity.equals("walking"))
-			this.walking++;
+			walking++;
 		if(activity.equals("stationary"))
-			this.stationary++;
+			stationary++;
 		if(activity.equals("jumping"))
-			this.jumping++;
+			jumping++;
+	}
+
+	private int getPercentageActivity(int activity) {
+		return (activity / (walking+stationary+jumping)) * 100;
 	}
 
 	private int getStateFromActivityString(String label){
@@ -281,7 +277,7 @@ public class ContextActivity extends ListActivity {
 					created = true;
 				}
 
-				String totalString = "Walking: " + w + "% Jumping: " + j + "% Stationary: " + s + "%";
+				String totalString = "Walking: " + this.walking + " Jumping: " + this.jumping + " Stationary: " + this.stationary;
 				Log.d(TAG,"activity:" + walking + stationary + jumping);
 				setText(totalString);
 				textViewx1.setTextColor(Color.RED);

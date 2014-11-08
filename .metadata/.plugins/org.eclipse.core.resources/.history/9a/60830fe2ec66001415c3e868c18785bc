@@ -16,7 +16,6 @@
 
 package edu.umass.cs.client;
 
-import java.text.DecimalFormat;
 import java.util.LinkedList;
 
 import java.util.List;
@@ -88,11 +87,11 @@ public class ContextActivity extends ListActivity {
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 	private GraphViewSeries x, y, z;
-	private String w, s, j;
+	private double w, s, j;
 	private int counter = 151;
 	private boolean created = false;
 	private TextView textViewx1 = null;
-	private double walking, stationary, jumping = 0;
+	private int walking, stationary, jumping = 0;
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -172,10 +171,8 @@ public class ContextActivity extends ListActivity {
 		}
 	}
 	
-	private String getPercentageActivity(double activity) {
-		DecimalFormat df = new DecimalFormat("#.#");
-		double result = (activity / (this.walking+this.stationary+this.jumping)) * 100;
-		return df.format(result);
+	private int getPercentageActivity(int activity) {
+		return (activity / (this.walking+this.stationary+this.jumping)) * 100;
 	}
 
 	/**

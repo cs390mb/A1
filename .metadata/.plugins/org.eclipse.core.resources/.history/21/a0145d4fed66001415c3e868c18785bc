@@ -88,7 +88,7 @@ public class ContextActivity extends ListActivity {
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 	private GraphViewSeries x, y, z;
-	private String w, s, j;
+	private double w, s, j;
 	private int counter = 151;
 	private boolean created = false;
 	private TextView textViewx1 = null;
@@ -172,10 +172,11 @@ public class ContextActivity extends ListActivity {
 		}
 	}
 	
-	private String getPercentageActivity(double activity) {
+	private double getPercentageActivity(double activity) {
 		DecimalFormat df = new DecimalFormat("#.#");
+		df.format(0.912385);
 		double result = (activity / (this.walking+this.stationary+this.jumping)) * 100;
-		return df.format(result);
+		return result.format();
 	}
 
 	/**
