@@ -270,7 +270,6 @@ public class ContextActivity extends ListActivity {
 				textViewx1.setText(totalString);
 				textViewx1.setTextColor(Color.RED);
 				textViewx1.setY(500);
-				view2.invalidate();
 				((ViewGroup) view2).addView(textViewx1);
 				break;
 			case ACCX:

@@ -246,4 +246,13 @@
         android:textSize="20sp"
         android:textStyle="bold" />
     
+    <RelativeLayout
+        android:id="@+id/wsj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dip"
+        android:padding="10dip"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </RelativeLayout>

@@ -245,5 +245,4 @@
         android:text="@string/visualize"
         android:textSize="20sp"
         android:textStyle="bold" />
-    
 </RelativeLayout>
