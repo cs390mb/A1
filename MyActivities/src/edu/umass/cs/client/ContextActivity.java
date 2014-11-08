@@ -59,6 +59,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class ContextActivity extends ListActivity {
 
@@ -84,7 +85,7 @@ public class ContextActivity extends ListActivity {
 	//   Messenger receiving messages from the background service to update UI
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
 	private GraphViewSeries x, y, z;
-	private GraphViewData w, s, j;
+	private int w, s, j;
 	private int counter = 151;
 
 	// Connection with the service
@@ -122,12 +123,13 @@ public class ContextActivity extends ListActivity {
 				//String activity = msg.getData().getString("activity");
 				String activity = (String) msg.obj;
 				addActivityTotal(activity);
-				w = new GraphViewData(1.0, (double)getPercentageActivity(walking));
-				s = new GraphViewData(2.0, (double)getPercentageActivity(stationary));
-				j = new GraphViewData(3.0, (double)getPercentageActivity(jumping));
-				Log.d(TAG,"activity:" + activity);
+				w = getPercentageActivity(walking);
+				s = getPercentageActivity(stationary);
+				j = getPercentageActivity(jumping);
+				Log.d(TAG,"activity:" + walking + stationary + jumping);
+				drawWidgets();
 				int state = getStateFromActivityString(activity);
-				if (widgets[STREAMS.ACTIVITY.ordinal()] !=null){
+				if (widgets[STREAMS.ACTIVITY.ordinal()] !=null) {
 					((ContextImageWidget)widgets[STREAMS.ACTIVITY.ordinal()]).history_view.add(state);
 					((ContextImageWidget)widgets[STREAMS.ACTIVITY.ordinal()]).setImage(state);
 				}
@@ -193,7 +195,7 @@ public class ContextActivity extends ListActivity {
 		}
 	}
 
-	private int walking, stationary, jumping;
+	private int walking, stationary, jumping = 0;
 	private void addActivityTotal(String activity) {
 		if(activity.equals("walking"))
 			walking++;
@@ -204,10 +206,9 @@ public class ContextActivity extends ListActivity {
 	}
 	
 	private int getPercentageActivity(int activity) {
-		return activity / (walking+stationary+jumping);
+		return (activity / (walking+stationary+jumping)) * 100;
 	}
-
-	@SuppressWarnings("deprecation")
+	
 	private int getStateFromActivityString(String label){
 		if(label.equals("walking")) {
 			return 0;
@@ -254,10 +255,22 @@ public class ContextActivity extends ListActivity {
 			Log.d(TAG,"selected: " + m);
 			switch(STREAMS.values()[m]){
 			case ACTIVITY:
+				View view2 = this.getWindow().getDecorView();
+				view2.setBackgroundColor(Color.WHITE);
+				
+				TextView textViewx1 = new TextView(this);
+				textViewx1.setText("HELLO");
+				((ViewGroup) view2).addView(textViewx1);
+				
+				String wString = Integer.toString(walking);
+				String jString = Integer.toString(jumping);
+				String sString = Integer.toString(stationary);
+				String totalString = "Walking: " + wString + " Jumping: " + jString + " Stationary: " + sString;
+				
 				if (Context_Service.raw_activity_history == null) 
 					Context_Service.raw_activity_history = new LinkedList<Integer>();
 				widgets[m] = new ContextImageWidget(this,2,Context_Service.raw_activity_history);
-				widgets[m].setTitle("Raw Activity: ");
+				widgets[m].setTitle(totalString);
 				widgets[m].addOrRemoveTitleViewAsNecessary();
 				break;
 			case ACCX:
@@ -266,6 +279,7 @@ public class ContextActivity extends ListActivity {
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accx_history);
 				widgets[m].setTitle(STREAMS.ACCX.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
+				
 				View view = this.getWindow().getDecorView();
 				view.setBackgroundColor(Color.BLACK);
 				int num = 150;
@@ -326,130 +340,14 @@ public class ContextActivity extends ListActivity {
 				((ViewGroup) view).addView(graphView);
 				break;
 			case ACCY:
-				View view2 = this.getWindow().getDecorView();
-				view2.setBackgroundColor(Color.BLACK);
-				int num2 = 150;
-				GraphViewData[] data2 = new GraphViewData[num2];
-				double v2=0;
-				for (int i=0; i<num2; i++) {
-					v2 += 0.2;
-					data2[i] = new GraphViewData(i, Math.sin(v2));
-				}
-				x = new GraphViewSeries("X", new GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), data2);
-
-				// cos curve
-				data2 = new GraphViewData[num2];
-				v2=0;
-				for (int i=0; i<num2; i++) {
-					v2 += 0.2;
-					data2[i] = new GraphViewData(i, Math.cos(v2));
-				}
-				y = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data2);
-
-				// random curve
-				num2 = 150;
-				data2 = new GraphViewData[num2];
-				v2=0;
-				for (int i=0; i<num2; i++) {
-					v2 += 0.2;
-					data2[i] = new GraphViewData(i, Math.sin(Math.random()*v2));
-				}
-				z = new GraphViewSeries("Z", null, data2);
-
-				/*
-				 * create graph
-				 */
-				GraphView graphView2 = new LineGraphView(
-						this
-						, "Current Accel Values"
-						);
-				// add data
-				graphView2.addSeries(x);
-				graphView2.addSeries(y);
-				graphView2.addSeries(z);
-				// optional - set view port, start=2, size=10
-				graphView2.setViewPort(2, 10);
-				graphView2.setScalable(true);
-				// optional - legend
-				graphView2.setShowLegend(true);
-				
-				// Get screen size
-				Display display2 = getWindowManager().getDefaultDisplay();
-				Point size2 = new Point();
-				display2.getSize(size2);
-				int width2 = size2.x;
-				int height2 = size2.y;
-				graphView2.setY(500);
-				graphView2.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
-				graphView2.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-				graphView2.setLayoutParams(new LayoutParams(width2, height2/4));
-				((ViewGroup) view2).addView(graphView2);
-				
 				if (Context_Service.accy_history == null) 
 					Context_Service.accy_history = new LinkedList<Float>();
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accy_history);
 				widgets[m].setTitle(STREAMS.ACCY.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
+				
 				break;
 			case ACCZ:
-				View view3 = this.getWindow().getDecorView();
-				view3.setBackgroundColor(Color.BLACK);
-				int num3 = 150;
-				GraphViewData[] data3 = new GraphViewData[num3];
-				double v3=0;
-				for (int i=0; i<num3; i++) {
-					v3 += 0.2;
-					data3[i] = new GraphViewData(i, Math.sin(v3));
-				}
-				x = new GraphViewSeries("X", new GraphViewSeriesStyle(Color.rgb(200, 50, 00), 3), data3);
-
-				// cos curve
-				data3 = new GraphViewData[num3];
-				v3=0;
-				for (int i=0; i<num3; i++) {
-					v3 += 0.2;
-					data3[i] = new GraphViewData(i, Math.cos(v3));
-				}
-				y = new GraphViewSeries("Y", new GraphViewSeriesStyle(Color.rgb(90, 250, 00), 3), data3);
-
-				// random curve
-				num3 = 150;
-				data3 = new GraphViewData[num3];
-				v3=0;
-				for (int i=0; i<num3; i++) {
-					v3 += 0.2;
-					data3[i] = new GraphViewData(i, Math.sin(Math.random()*v3));
-				}
-				z = new GraphViewSeries("Z", null, data3);
-
-				/*
-				 * create graph
-				 */
-				GraphView graphView3 = new LineGraphView(
-						this
-						, "Current Accel Values"
-						);
-				// add data
-				graphView3.addSeries(x);
-				graphView3.addSeries(y);
-				graphView3.addSeries(z);
-				// optional - set view port, start=2, size=10
-				graphView3.setViewPort(2, 10);
-				graphView3.setScalable(true);
-				// optional - legend
-				graphView3.setShowLegend(true);
-				
-				// Get screen size
-				Display display3 = getWindowManager().getDefaultDisplay();
-				Point size3 = new Point();
-				display3.getSize(size3);
-				int width3 = size3.x;
-				int height3 = size3.y;
-				graphView3.setY(850);
-				graphView3.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
-				graphView3.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-				graphView3.setLayoutParams(new LayoutParams(width3, height3/4));
-				((ViewGroup) view3).addView(graphView3);
 				if (Context_Service.accz_history == null) 
 					Context_Service.accz_history = new LinkedList<Float>();
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accz_history);

@@ -36,7 +36,6 @@ public final class R {
         public static final int YView=0x7f06000c;
         public static final int ZView=0x7f06000e;
         public static final int action_pick=0x7f060012;
-        public static final int graph1=0x7f060013;
     }
     public static final class layout {
         public static final int main=0x7f030000;

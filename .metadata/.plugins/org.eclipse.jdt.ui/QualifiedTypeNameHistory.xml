@@ -11,4 +11,6 @@
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="android.view.Menu"/>
 <fullyQualifiedTypeName name="android.view.MenuItem"/>
+<fullyQualifiedTypeName name="android.widget.TextView"/>
+<fullyQualifiedTypeName name="edu.umass.cs.client.R.id"/>
 </qualifiedTypeNameHistroy>
