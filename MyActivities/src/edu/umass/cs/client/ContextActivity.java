@@ -57,6 +57,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -88,6 +89,8 @@ public class ContextActivity extends ListActivity {
 	private GraphViewSeries x, y, z;
 	private int w, s, j;
 	private int counter = 151;
+	private boolean created = false;
+	private TextView textViewx1 = null;
 
 	// Connection with the service
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -127,8 +130,8 @@ public class ContextActivity extends ListActivity {
 				w = getPercentageActivity(walking);
 				s = getPercentageActivity(stationary);
 				j = getPercentageActivity(jumping);
-				Log.d(TAG,"activity:" + walking + stationary + jumping);
-				drawWidgets();
+				String totalString = "Walking: " + walking + " Jumping: " + jumping + " Stationary: " + stationary;
+				setText(totalString);
 				int state = getStateFromActivityString(activity);
 				if (widgets[STREAMS.ACTIVITY.ordinal()] !=null) {
 					((ContextImageWidget)widgets[STREAMS.ACTIVITY.ordinal()]).history_view.add(state);
@@ -205,11 +208,11 @@ public class ContextActivity extends ListActivity {
 		if(activity.equals("jumping"))
 			jumping++;
 	}
-	
+
 	private int getPercentageActivity(int activity) {
 		return (activity / (walking+stationary+jumping)) * 100;
 	}
-	
+
 	private int getStateFromActivityString(String label){
 		if(label.equals("walking")) {
 			return 0;
@@ -249,6 +252,11 @@ public class ContextActivity extends ListActivity {
 			drawWidgets();
 		} 
 	}
+	
+	private void setText(String totalString) {
+		textViewx1.setText(totalString);
+		return;
+	}
 
 	private void drawWidgets(){
 		List<Integer> selected = Context_Service.selected;
@@ -261,17 +269,21 @@ public class ContextActivity extends ListActivity {
 				widgets[m] = new ContextImageWidget(this,2,Context_Service.raw_activity_history);
 				widgets[m].setTitle("Hi.");
 				widgets[m].addOrRemoveTitleViewAsNecessary();
-				
+
 				View view2 = this.getWindow().getDecorView();
 				view2.setBackgroundColor(Color.BLACK);
-				
+				if (!created) {
+					textViewx1 = new TextView(this);
+					created = true;
+				}
+
 				String totalString = "Walking: " + this.walking + " Jumping: " + this.jumping + " Stationary: " + this.stationary;
-				TextView textViewx1 = new TextView(this);
-				textViewx1.setText(totalString);
+				Log.d(TAG,"activity:" + walking + stationary + jumping);
+				setText(totalString);
 				textViewx1.setTextColor(Color.RED);
 				textViewx1.setY(500);
-				view2.invalidate();
 				((ViewGroup) view2).addView(textViewx1);
+
 				break;
 			case ACCX:
 				if (Context_Service.accx_history == null) 
@@ -279,7 +291,7 @@ public class ContextActivity extends ListActivity {
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accx_history);
 				widgets[m].setTitle(STREAMS.ACCX.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
-				
+
 				View view = this.getWindow().getDecorView();
 				view.setBackgroundColor(Color.BLACK);
 				int num = 150;
@@ -326,7 +338,7 @@ public class ContextActivity extends ListActivity {
 				graphView.setScalable(true);
 				// optional - legend
 				graphView.setShowLegend(true);
-				
+
 				// Get screen size
 				Display display = getWindowManager().getDefaultDisplay();
 				Point size = new Point();
@@ -345,7 +357,7 @@ public class ContextActivity extends ListActivity {
 				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accy_history);
 				widgets[m].setTitle(STREAMS.ACCY.toString());
 				widgets[m].addOrRemoveTitleViewAsNecessary();
-				
+
 				break;
 			case ACCZ:
 				if (Context_Service.accz_history == null) 
