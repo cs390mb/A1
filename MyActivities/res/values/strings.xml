@@ -15,4 +15,10 @@
     <string name="activity">Activity</string>
     <string name="visualize">Visualize</string>
     <string name="action_pick">Pick action</string>
+    <!-- Audio Strings -->
+    <string name="data_collect">Audio Collection</string>
+    <string name="record">Record</string>
+    <string name="stop">Stop</string>
+    <string name="speech">Speech</string>
+    <string name="status_speech">Speech Status</string>
 </resources>
