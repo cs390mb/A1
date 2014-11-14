@@ -191,7 +191,7 @@ public class Context_Service extends Service implements SensorEventListener, Mic
 	}
 
 	private Object[] result = new Object[12];
-	private double thresholdBuffer = 20;
+	private double thresholdBuffer = 40;
 
     public void microphoneBuffer(short[] buffer, int window_size) {
     	//You will break a chunk of one-second-long samples into multiple 25-ms windows. 
@@ -201,7 +201,7 @@ public class Context_Service extends Service implements SensorEventListener, Mic
     	int voiced = 0;
 
     	//TODO: Fill out appropriate numbers in the following for loop statement 
-    	for(int k=0;k<40;k++){
+    	for(int k=0;k<80;k++){
     		//TODO: replace ‘??’ with appropriate numbers below
     		double[] features = FeatureExtractor.ComputeFeaturesForFrame(buffer,1000,k);
     		try {
