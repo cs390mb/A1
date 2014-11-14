@@ -14,126 +14,51 @@
         android:padding="10dip" />
 
     <RelativeLayout
-        android:id="@+id/StartButtonLayout"
-        android:layout_width="fill_parent"
+        android:id="@+id/action_pick"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/TopHorizontalSpaceView"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dip"
+        android:padding="10dip"
+        android:text="@string/visualize"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+    
+    <RelativeLayout
+        android:id="@+id/wsj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dip"
+        android:padding="10dip"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/RecordTopHorizontalSpaceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-        android:orientation="horizontal"
-        android:padding="5dip" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="40dip"
-            android:padding="10dip"
-            android:text="@string/accel"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ToggleButton
-            android:id="@+id/StartButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dip" />
-    </RelativeLayout>
+        android:padding="10dip" />
 
     <RelativeLayout
-        android:id="@+id/StepsLayout"
+        android:id="@+id/VisualizeButtonLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/StartButtonLayout"
-        android:layout_centerHorizontal="true"
-        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:orientation="horizontal"
         android:padding="5dip" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dip"
-            android:padding="10dip"
-            android:text="@string/steps"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/StepCountView"
+        <Button
+            android:id="@+id/VizualizeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_marginRight="30dip"
             android:padding="10dip"
-            android:text=""
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/ActivityLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/StepsLayout"
-        android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-        android:orientation="horizontal"
-        android:padding="5dip" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dip"
-            android:padding="10dip"
-            android:text="@string/activity"
+            android:text="@string/visualize"
             android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/ActivityImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="10dip"
-            android:text=""
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/StatusLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ActivityLayout"
-        android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-        android:orientation="horizontal"
-        android:padding="5dip" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dip"
-            android:padding="10dip"
-            android:text="@string/status"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/StatusView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="10dip"
-            android:text=""
-            android:textSize="15sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -141,7 +66,7 @@
         android:id="@+id/AccelLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/StatusLayout"
+        android:layout_above="@+id/VisualizeButtonLayout"
         android:layout_centerHorizontal="true"
         android:background="#ffffff"
         android:orientation="horizontal"
@@ -215,44 +140,159 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/VisualizeButtonLayout"
+        android:id="@+id/StatusLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/AccelLayout"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/AccelLayout"
+        android:layout_alignParentLeft="true"
+        android:background="#ffffff"
         android:orientation="horizontal"
         android:padding="5dip" >
 
-        <Button
-            android:id="@+id/VizualizeButton"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dip"
+            android:padding="10dip"
+            android:text="@string/status"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/StatusView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dip"
+            android:layout_centerVertical="true"
             android:padding="10dip"
-            android:text="@string/visualize"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/action_pick"
-        android:layout_width="wrap_content"
+        android:id="@+id/ActivityLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dip"
-        android:padding="10dip"
-        android:text="@string/visualize"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-    
+        android:layout_above="@+id/StatusLayout"
+        android:layout_alignParentLeft="true"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dip"
+            android:padding="10dip"
+            android:text="@string/activity"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/ActivityImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dip"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
     <RelativeLayout
-        android:id="@+id/wsj"
-        android:layout_width="wrap_content"
+        android:id="@+id/StepsLayout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dip"
-        android:padding="10dip"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_above="@+id/ActivityLayout"
+        android:layout_alignParentLeft="true"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dip"
+            android:padding="10dip"
+            android:text="@string/steps"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/StepCountView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dip"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/RecordButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TopHorizontalSpaceView"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <ToggleButton
+            android:id="@+id/RecordButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dip" 
+            android:padding="10dip"
+            android:text="@string/record"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/statusSpeechView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/RecordButton"
+            android:layout_marginLeft="14dp"
+            android:padding="10dip"
+            android:text="@string/data_collect"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/StartButtonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/StepsLayout"
+        android:layout_alignParentLeft="true"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:padding="5dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="40dip"
+            android:padding="10dip"
+            android:text="@string/accel"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ToggleButton
+            android:id="@+id/StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dip" />
+    </RelativeLayout>
+    
 </RelativeLayout>

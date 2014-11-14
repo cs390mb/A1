@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 	 * Variable to check if accelerometer is running
 	 */
 	private boolean accelStarted = false;
-
+	private boolean recordStarted = false;
 	/**
 	 * Instance of this activity
 	 */
@@ -46,9 +46,9 @@ public class MainActivity extends Activity {
 	 * Various UI components 
 	 */
 	private TextView accelXView, accelYView, accelZView;
-	private TextView statusView, stepsView;
+	private TextView statusView, stepsView, statusSpeechView;
 	private ImageView activityView;
-	private CompoundButton accelButton;
+	private CompoundButton accelButton, recordButton;
 	private Button vizButton;
 
 	/**
@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 				//TODO: Display activity in UI
 				String activity = (String) msg.obj;
 				//activityView.setText(""+activity);
-            	setImage(activity);
+				setImage(activity);
 				break;
 			}
 			case Context_Service.MSG_STEP_COUNTER:
@@ -109,6 +109,24 @@ public class MainActivity extends Activity {
 					accelButton.setChecked(false);
 					accelStarted = false;
 					statusView.setText("Accelerometer Stopped");
+				}
+				break;
+			}
+			case Context_Service.MSG_MICROPHONE_STARTED:
+			{
+				if(recordButton!=null) {
+					recordButton.setChecked(true);
+					recordStarted = true;
+					statusSpeechView.setText("Microphone Started");
+				}
+				break;
+			}
+			case Context_Service.MSG_MICROPHONE_STOPPED: 
+			{
+				if(recordButton!=null) {
+					recordButton.setChecked(false);
+					recordStarted = false;
+					statusSpeechView.setText("Microphone Stopped");
 				}
 				break;
 			}
@@ -202,6 +220,26 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		}); 
+
+		//Determine if the microphone is on
+		recordStarted = false;
+		if(Context_Service.isMicrophoneRunning())
+			recordStarted = true;
+
+		//Set the buttons and the text accordingly
+		recordButton = (ToggleButton) findViewById(R.id.RecordButton);
+		recordButton.setChecked(recordStarted);
+		recordButton.setOnCheckedChangeListener(
+				new OnCheckedChangeListener() {
+					public void onCheckedChanged(CompoundButton btn,boolean isChecked) {
+						recordStarted = Context_Service.isMicrophoneRunning();
+						if(!recordStarted)
+							startMicrophone();
+						else
+							stopMicrophone();
+					}
+				}
+				);
 	}
 
 	/**
@@ -249,19 +287,19 @@ public class MainActivity extends Activity {
 		accelZView.setText(text);
 	}
 
-    /**
-     * Display Activity Image
-     * @param label
-     */
-    public void setImage(String label){
-    	ImageView image = activityView;
-    	if(label.equals("stationary"))
-    		image.setImageResource(R.drawable.standing);
-    	else if(label.equals("walking"))
-    		image.setImageResource(R.drawable.walking);
-    	else if(label.equals("jumping"))
-    		image.setImageResource(R.drawable.jumping);
-    }
+	/**
+	 * Display Activity Image
+	 * @param label
+	 */
+	public void setImage(String label){
+		ImageView image = activityView;
+		if(label.equals("stationary"))
+			image.setImageResource(R.drawable.standing);
+		else if(label.equals("walking"))
+			image.setImageResource(R.drawable.walking);
+		else if(label.equals("jumping"))
+			image.setImageResource(R.drawable.jumping);
+	}
 
 	@Override
 	public void onBackPressed() {
@@ -331,5 +369,19 @@ public class MainActivity extends Activity {
 		if(mIsBound) {
 			sendMessageToService(Context_Service.MSG_STOP_ACCELEROMETER);
 		}
+	}
+
+	/**
+	 * Sends Accelerometer Start Request
+	 */
+	private void startMicrophone() {
+		sendMessageToService(Context_Service.MSG_START_MICROPHONE);
+	}
+
+	/**
+	 * Sends Accelerometer Stop Request
+	 */
+	private void stopMicrophone() {
+		sendMessageToService(Context_Service.MSG_STOP_MICROPHONE);
 	}
 }

@@ -17,29 +17,31 @@ public final class R {
         public static final int walking=0x7f020003;
     }
     public static final class id {
-        public static final int AccelLayout=0x7f060009;
-        public static final int AccelXView=0x7f06000b;
-        public static final int AccelYView=0x7f06000d;
-        public static final int AccelZView=0x7f06000f;
-        public static final int ActivityImageView=0x7f060006;
-        public static final int ActivityLayout=0x7f060005;
-        public static final int RecordButton=0x7f060016;
-        public static final int RecordButtonLayout=0x7f060015;
-        public static final int StartButton=0x7f060002;
-        public static final int StartButtonLayout=0x7f060001;
-        public static final int StatusLayout=0x7f060007;
-        public static final int StatusView=0x7f060008;
-        public static final int StepCountView=0x7f060004;
-        public static final int StepsLayout=0x7f060003;
+        public static final int AccelLayout=0x7f060006;
+        public static final int AccelXView=0x7f060008;
+        public static final int AccelYView=0x7f06000a;
+        public static final int AccelZView=0x7f06000c;
+        public static final int ActivityImageView=0x7f060010;
+        public static final int ActivityLayout=0x7f06000f;
+        public static final int RecordButton=0x7f060014;
+        public static final int RecordButtonLayout=0x7f060013;
+        public static final int RecordTopHorizontalSpaceView=0x7f060003;
+        public static final int StartButton=0x7f060017;
+        public static final int StartButtonLayout=0x7f060016;
+        public static final int StatusLayout=0x7f06000d;
+        public static final int StatusView=0x7f06000e;
+        public static final int StepCountView=0x7f060012;
+        public static final int StepsLayout=0x7f060011;
         public static final int TopHorizontalSpaceView=0x7f060000;
-        public static final int VisualizeButtonLayout=0x7f060010;
-        public static final int VizualizeButton=0x7f060011;
-        public static final int XView=0x7f06000a;
-        public static final int YView=0x7f06000c;
-        public static final int ZView=0x7f06000e;
-        public static final int action_pick=0x7f060012;
-        public static final int root=0x7f060014;
-        public static final int wsj=0x7f060013;
+        public static final int VisualizeButtonLayout=0x7f060004;
+        public static final int VizualizeButton=0x7f060005;
+        public static final int XView=0x7f060007;
+        public static final int YView=0x7f060009;
+        public static final int ZView=0x7f06000b;
+        public static final int action_pick=0x7f060001;
+        public static final int root=0x7f060018;
+        public static final int statusSpeechView=0x7f060015;
+        public static final int wsj=0x7f060002;
     }
     public static final class layout {
         public static final int main=0x7f030000;
