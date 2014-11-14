@@ -54,12 +54,32 @@
             android:id="@+id/VizualizeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:padding="10dip"
             android:text="@string/visualize"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <ToggleButton
+            android:id="@+id/StartButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView1"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/VizualizeButton"
+            android:layout_alignBottom="@+id/VizualizeButton"
+            android:layout_toRightOf="@+id/VizualizeButton"
+            android:padding="10dip"
+            android:text="@string/accel"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -205,7 +225,7 @@
         android:id="@+id/StepsLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ActivityLayout"
+        android:layout_below="@+id/ActivityLayout"
         android:layout_alignParentLeft="true"
         android:background="#ffffff"
         android:orientation="horizontal"
@@ -241,23 +261,6 @@
         android:background="#ffffff"
         android:orientation="horizontal"
         android:padding="5dip" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="40dip"
-            android:padding="10dip"
-            android:text="@string/accel"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ToggleButton
-            android:id="@+id/StartButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dip" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -298,8 +301,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_below="@+id/recordLabel"
             android:layout_marginLeft="20dip"
-            android:layout_below = "@+id/recordLabel"
             android:padding="10dip"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -309,19 +312,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
- 			android:layout_below = "@+id/RecordButton"
+            android:layout_below="@+id/RecordButton"
             android:layout_centerVertical="true"
             android:padding="10dip"
             android:textSize="15sp"
             android:textStyle="bold" />
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:id="@+id/SpeechLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/RecordButtonLayout"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/RecordButtonLayout"
         android:background="#ffffff"
         android:orientation="horizontal"
         android:padding="5dip" >
@@ -346,6 +349,17 @@
             android:padding="10dip"
             android:textSize="15sp"
             android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/speechGraph"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/SpeechLayout"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:padding="5dip" >
     </RelativeLayout>
 
 </RelativeLayout>

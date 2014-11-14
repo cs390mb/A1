@@ -1,11 +1,17 @@
 package edu.umass.cs.client;
 
+import com.jjoe64.graphview.BarGraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewSeries;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -13,12 +19,16 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -50,6 +60,8 @@ public class MainActivity extends Activity {
 	private ImageView activityView;
 	private CompoundButton accelButton, recordButton;
 	private Button vizButton;
+	private GraphViewSeries exampleSeries;
+	private GraphView graphView;
 
 	/**
 	 * Messenger service for exchanging messages with the background service
@@ -118,7 +130,14 @@ public class MainActivity extends Activity {
 					recordButton.setChecked(true);
 					recordStarted = true;
 					statusMicView.setText("Microphone Started");
-					statusSpeechView.setText(""+msg.arg1);
+					
+					if (msg.arg1 == 1) {
+						setBars(1);
+						statusSpeechView.setText("Speech");
+					} else {
+						setBars(0);
+						statusSpeechView.setText("!Speech");
+					}
 				}
 				break;
 			}
@@ -162,6 +181,26 @@ public class MainActivity extends Activity {
 		}
 	};
 
+	private void setBars(int speech) {
+		try {
+			if (speech == 1) {
+				exampleSeries = new GraphViewSeries(new GraphViewData[] {
+						new GraphViewData(1, 1)
+						, new GraphViewData(2, 0)
+				});
+			} else {
+				exampleSeries = new GraphViewSeries(new GraphViewData[] {
+						new GraphViewData(1, 0)
+						, new GraphViewData(2, 1)
+				});
+			}
+		} catch (NumberFormatException i) {
+
+		}
+		graphView.removeAllSeries();
+		graphView.addSeries(exampleSeries);
+	}
+
 	/* Invoked when an activity is created
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -193,6 +232,31 @@ public class MainActivity extends Activity {
 			Intent cssBg = new Intent(activity,Context_Service.class);
 			startService(cssBg);
 		}
+
+		// init example series data
+		exampleSeries = new GraphViewSeries(new GraphViewData[] {
+				new GraphViewData(1, 0)
+				, new GraphViewData(2, 0)
+		});
+
+		graphView = new BarGraphView(
+				this // context
+				, "SpeechGraph" // heading
+				);
+		setBars(0);
+		graphView.setManualYAxisBounds(1, 0); 
+		Display display2 = getWindowManager().getDefaultDisplay();
+		Point size2 = new Point();
+		display2.getSize(size2);
+		int width2 = size2.x;
+		int height2 = size2.y;
+		graphView.setLayoutParams(new LayoutParams(width2, height2/7));
+		String[] labels = new String[2];
+		labels[0] = "Speech";
+		labels[1] = "!Speech";
+		graphView.setHorizontalLabels(labels);
+		RelativeLayout layout = (RelativeLayout) findViewById(R.id.speechGraph);
+		layout.addView(graphView);
 
 
 		//Bind to the service if it is already running
