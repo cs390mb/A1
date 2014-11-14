@@ -207,7 +207,7 @@ public class Context_Service extends Service implements SensorEventListener{
     			//TODO: classify whether the window is voiced or not 		
     			//If output of the classifier is 0.0d, increment ‘voiced’ variable. If output is 1.0d, it is unvoiced. 
     			//This is assuming that you have the order of classes written in arff file as: “speech{true,false}.” 
-    			voiced += SpeechDetector.classify(result);
+    			SpeechDetector.classify(result[k]);
     		} catch (Exception e) {
     			e.printStackTrace();
     		}

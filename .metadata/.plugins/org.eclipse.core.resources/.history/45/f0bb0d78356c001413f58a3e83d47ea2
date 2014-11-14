@@ -201,13 +201,13 @@ public class Context_Service extends Service implements SensorEventListener{
     	//TODO: Fill out appropriate numbers in the following for loop statement 
     	for(int k=0;k<40;k++){
     		//TODO: replace ‘??’ with appropriate numbers below
-    		double[] features = FeatureExtractor.ComputeFeaturesForFrame(buffer,1000,k);
+    		double[] features = FeatureExtractor.ComputeFeaturesForFrame(buffer,40,k);
     		try {
     			result = getObjectDoubleArray(features,result);
     			//TODO: classify whether the window is voiced or not 		
     			//If output of the classifier is 0.0d, increment ‘voiced’ variable. If output is 1.0d, it is unvoiced. 
     			//This is assuming that you have the order of classes written in arff file as: “speech{true,false}.” 
-    			voiced += SpeechDetector.classify(result);
+    			
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
