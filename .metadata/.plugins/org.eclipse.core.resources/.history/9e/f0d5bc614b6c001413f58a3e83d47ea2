@@ -209,7 +209,7 @@ public class Context_Service extends Service implements SensorEventListener, Mic
     			//TODO: classify whether the window is voiced or not 		
     			//If output of the classifier is 0.0d, increment ‘voiced’ variable. If output is 1.0d, it is unvoiced. 
     			//This is assuming that you have the order of classes written in arff file as: “speech{true,false}.” 
-    			if (SpeechDetector.classify(result) == 0) {
+    			if (SpeechDetector.classify(result) == 1) {
     				voiced++;
     				Log.d("voice", Integer.toString(voiced));
     			}

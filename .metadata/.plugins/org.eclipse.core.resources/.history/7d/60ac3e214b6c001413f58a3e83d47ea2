@@ -209,7 +209,7 @@ public class Context_Service extends Service implements SensorEventListener, Mic
     			//TODO: classify whether the window is voiced or not 		
     			//If output of the classifier is 0.0d, increment ‘voiced’ variable. If output is 1.0d, it is unvoiced. 
     			//This is assuming that you have the order of classes written in arff file as: “speech{true,false}.” 
-    			if (SpeechDetector.classify(result) == 0) {
+    			if (SpeechDetector.classify(result) == 1) {
     				voiced++;
     				Log.d("voice", Integer.toString(voiced));
     			}
@@ -221,6 +221,7 @@ public class Context_Service extends Service implements SensorEventListener, Mic
     	//audio mostly contain human voice or not by thresholding. Test out different thresholds and choose whichever works the best. 
     	//Keep in mind that threshold should be less than the number of 25-ms-long windows that contain in a second. 
     	//If ‘voiced’ variable is greater than a certain threshold, call sendSpeechStatusToUI() with speech variable=1. 
+    	Log.d("voice", Integer.toString(voiced));
     	if (voiced <= thresholdBuffer) {
     		sendSpeechStatusToUI(1);
     	} else {
