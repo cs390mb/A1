@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
 	 * Various UI components 
 	 */
 	private TextView accelXView, accelYView, accelZView;
-	private TextView statusView, stepsView, statusSpeechView;
+	private TextView statusView, stepsView, statusSpeechView, statusMic, statusSpeech, statusMicView;
 	private ImageView activityView;
 	private CompoundButton accelButton, recordButton;
 	private Button vizButton;
@@ -117,7 +117,7 @@ public class MainActivity extends Activity {
 				if(recordButton!=null) {
 					recordButton.setChecked(true);
 					recordStarted = true;
-					statusSpeechView.setText("Microphone Started");
+					statusMicView.setText("Microphone Started");
 				}
 				break;
 			}
@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
 				if(recordButton!=null) {
 					recordButton.setChecked(false);
 					recordStarted = false;
-					statusSpeechView.setText("Microphone Stopped");
+					statusMicView.setText("Microphone Stopped");
 				}
 				break;
 			}
@@ -179,6 +179,13 @@ public class MainActivity extends Activity {
 		accelYView = (TextView) findViewById(R.id.AccelYView);
 		accelZView = (TextView) findViewById(R.id.AccelZView);
 		statusView.setText("Service Not Bound");
+		statusMic = (TextView) findViewById(R.id.statusMic);
+		statusMic.setText("Mic Status");
+		statusMicView = (TextView) findViewById(R.id.statusMicView);
+		statusMicView.setText("Microphone Stopped");
+		statusSpeech = (TextView) findViewById(R.id.statusSpeech);
+		statusSpeech.setText("Speech Status");
+		statusSpeechView = (TextView) findViewById(R.id.statusSpeechView);
 
 		//Start Background Service if not already started
 		if(!Context_Service.isRunning()) {

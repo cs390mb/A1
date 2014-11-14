@@ -35,7 +35,7 @@ import edu.umass.cs.voice.MicrophoneRecorder.MicrophoneListener;
  * 
  */
 @SuppressWarnings("unused")
-public class Context_Service extends Service implements SensorEventListener{
+public class Context_Service extends Service implements SensorEventListener, MicrophoneListener {
 
 	/**
 	 * Notification manager to display notifications
@@ -89,7 +89,7 @@ public class Context_Service extends Service implements SensorEventListener{
 
 
 	static Context_Service sInstance = null;
-	static MicrophoneListener mInstance = null;
+	static Context_Service mInstance = null;
 	private static boolean isRunning = false;
 	private static boolean isAccelRunning = false;
 	private static boolean isMicrophoneRunning = false;
@@ -190,6 +190,7 @@ public class Context_Service extends Service implements SensorEventListener{
 	}
 
 	private Object[] result = new Object[12];
+	private double thresholdBuffer = 20;
 
     public void microphoneBuffer(short[] buffer, int window_size) {
     	//You will break a chunk of one-second-long samples into multiple 25-ms windows. 
@@ -207,7 +208,9 @@ public class Context_Service extends Service implements SensorEventListener{
     			//TODO: classify whether the window is voiced or not 		
     			//If output of the classifier is 0.0d, increment ‘voiced’ variable. If output is 1.0d, it is unvoiced. 
     			//This is assuming that you have the order of classes written in arff file as: “speech{true,false}.” 
-    			voiced += SpeechDetector.classify(result);
+    			if (SpeechDetector.classify(result) == 1) {
+    				voiced++;
+    			}
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
@@ -216,6 +219,11 @@ public class Context_Service extends Service implements SensorEventListener{
     	//audio mostly contain human voice or not by thresholding. Test out different thresholds and choose whichever works the best. 
     	//Keep in mind that threshold should be less than the number of 25-ms-long windows that contain in a second. 
     	//If ‘voiced’ variable is greater than a certain threshold, call sendSpeechStatusToUI() with speech variable=1. 
+    	if (voiced <= thresholdBuffer) {
+    		sendSpeechStatusToUI(1);
+    	} else {
+    		sendSpeechStatusToUI(0);
+    	}
     }
 
     public static Object[] getObjectDoubleArray(double[] in, Object[] result){
@@ -303,9 +311,6 @@ public class Context_Service extends Service implements SensorEventListener{
 	}
 
 
-	
-	
-
 	//Start service automatically if we reboot the phone
 	public static class Context_BGReceiver extends BroadcastReceiver {
 		@Override
@@ -373,6 +378,7 @@ public class Context_Service extends Service implements SensorEventListener{
 		showNotification();
 		isRunning = true;
 		sInstance = this;
+		mInstance = this;
 		mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 		mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	}

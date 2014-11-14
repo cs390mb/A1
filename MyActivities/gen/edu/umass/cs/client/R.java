@@ -23,11 +23,12 @@ public final class R {
         public static final int AccelZView=0x7f06000c;
         public static final int ActivityImageView=0x7f060010;
         public static final int ActivityLayout=0x7f06000f;
-        public static final int RecordButton=0x7f060014;
-        public static final int RecordButtonLayout=0x7f060013;
+        public static final int RecordButton=0x7f060016;
+        public static final int RecordButtonLayout=0x7f060015;
         public static final int RecordTopHorizontalSpaceView=0x7f060003;
-        public static final int StartButton=0x7f060017;
-        public static final int StartButtonLayout=0x7f060016;
+        public static final int SpeechLayout=0x7f06001a;
+        public static final int StartButton=0x7f060014;
+        public static final int StartButtonLayout=0x7f060013;
         public static final int StatusLayout=0x7f06000d;
         public static final int StatusView=0x7f06000e;
         public static final int StepCountView=0x7f060012;
@@ -39,8 +40,12 @@ public final class R {
         public static final int YView=0x7f060009;
         public static final int ZView=0x7f06000b;
         public static final int action_pick=0x7f060001;
-        public static final int root=0x7f060018;
-        public static final int statusSpeechView=0x7f060015;
+        public static final int recordLabel=0x7f060017;
+        public static final int root=0x7f06001d;
+        public static final int statusMic=0x7f060018;
+        public static final int statusMicView=0x7f060019;
+        public static final int statusSpeech=0x7f06001b;
+        public static final int statusSpeechView=0x7f06001c;
         public static final int wsj=0x7f060002;
     }
     public static final class layout {
