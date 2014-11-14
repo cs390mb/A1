@@ -389,6 +389,7 @@ public class ContextActivity extends ListActivity {
 					barGraphSeries = new GraphViewSeries(new GraphViewData[] {
 							new GraphViewData(1, 0)
 							, new GraphViewData(2, 0)
+							, new GraphViewData(3, 0)
 					});
 					barGraphView = new BarGraphView(
 							this // context
@@ -397,7 +398,7 @@ public class ContextActivity extends ListActivity {
 					createdVoice = true;
 				}
 				setBars();
-				barGraphView.setY(400);
+				barGraphView.setY(800);
 				// Get screen size
 				Display display5 = getWindowManager().getDefaultDisplay();
 				Point size5 = new Point();
@@ -406,7 +407,7 @@ public class ContextActivity extends ListActivity {
 				int height5 = size5.y;
 				barGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
 				barGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-				barGraphView.setManualYAxisBounds(50, 0);
+				barGraphView.setManualYAxisBounds(100, 0);
 				String[] labels5 = new String[3];
 				labels5[0] = "Speech";
 				labels5[1] = "!Speech";

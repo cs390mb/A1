@@ -380,7 +380,50 @@ public class ContextActivity extends ListActivity {
 				graphView.setLayoutParams(new LayoutParams(width, height/4));
 				((ViewGroup) view).addView(graphView);
 				break;
-			case VOICE:
+//			case VOICE:
+				
+			case PERCENTAGEBAR:
+//				if (Context_Service.accy_history == null) 
+//					Context_Service.accy_history = new LinkedList<Float>();
+//				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accy_history);
+//				widgets[m].setTitle(STREAMS.PERCENTAGEBAR.toString());
+//				widgets[m].addOrRemoveTitleViewAsNecessary();
+//
+//				View view3 = this.getWindow().getDecorView();
+//				view3.setBackgroundColor(Color.BLACK);
+//				if (!createdBar) {
+//					// init example series data
+//					barGraphSeries = new GraphViewSeries(new GraphViewData[] {
+//							new GraphViewData(1, 0)
+//							, new GraphViewData(2, 0)
+//							, new GraphViewData(3, 0)
+//					});
+//					barGraphView = new BarGraphView(
+//							this // context
+//							, "Activity Percentage Data" // heading
+//							);
+//					createdBar = true;
+//				}
+//				setBars();
+//				barGraphView.setY(800);
+//				// Get screen size
+//				Display display2 = getWindowManager().getDefaultDisplay();
+//				Point size2 = new Point();
+//				display2.getSize(size2);
+//				int width2 = size2.x;
+//				int height2 = size2.y;
+//				barGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
+//				barGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
+//				barGraphView.setManualYAxisBounds(100, 0);
+//				String[] labels = new String[3];
+//				labels[0] = "Walking";
+//				labels[1] = "Stationary";
+//				labels[2] = "Jumping";
+//				barGraphView.setHorizontalLabels(labels);
+//				barGraphView.setLayoutParams(new LayoutParams(width2, height2/4));
+//				((ViewGroup) view3).addView(barGraphView);
+//
+//				break;
 				View view5 = this.getWindow().getDecorView();
 				view5.setBackgroundColor(Color.BLACK);
 				
@@ -413,48 +456,6 @@ public class ContextActivity extends ListActivity {
 				barGraphView.setHorizontalLabels(labels5);
 				barGraphView.setLayoutParams(new LayoutParams(width5, height5/4));
 				((ViewGroup) view5).addView(barGraphView);
-
-				break;
-			case PERCENTAGEBAR:
-				if (Context_Service.accy_history == null) 
-					Context_Service.accy_history = new LinkedList<Float>();
-				widgets[m] = new ContinuousContextImageWidget(this,-20,20,150,Context_Service.accy_history);
-				widgets[m].setTitle(STREAMS.PERCENTAGEBAR.toString());
-				widgets[m].addOrRemoveTitleViewAsNecessary();
-
-				View view3 = this.getWindow().getDecorView();
-				view3.setBackgroundColor(Color.BLACK);
-				if (!createdBar) {
-					// init example series data
-					barGraphSeries = new GraphViewSeries(new GraphViewData[] {
-							new GraphViewData(1, 0)
-							, new GraphViewData(2, 0)
-							, new GraphViewData(3, 0)
-					});
-					barGraphView = new BarGraphView(
-							this // context
-							, "Activity Percentage Data" // heading
-							);
-					createdBar = true;
-				}
-				setBars();
-				barGraphView.setY(800);
-				// Get screen size
-				Display display2 = getWindowManager().getDefaultDisplay();
-				Point size2 = new Point();
-				display2.getSize(size2);
-				int width2 = size2.x;
-				int height2 = size2.y;
-				barGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
-				barGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-				barGraphView.setManualYAxisBounds(100, 0);
-				String[] labels = new String[3];
-				labels[0] = "Walking";
-				labels[1] = "Stationary";
-				labels[2] = "Jumping";
-				barGraphView.setHorizontalLabels(labels);
-				barGraphView.setLayoutParams(new LayoutParams(width2, height2/4));
-				((ViewGroup) view3).addView(barGraphView);
 
 				break;
 			}

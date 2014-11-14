@@ -220,8 +220,8 @@ public class Context_Service extends Service implements SensorEventListener, Mic
     	//audio mostly contain human voice or not by thresholding. Test out different thresholds and choose whichever works the best. 
     	//Keep in mind that threshold should be less than the number of 25-ms-long windows that contain in a second. 
     	//If ‘voiced’ variable is greater than a certain threshold, call sendSpeechStatusToUI() with speech variable=1. 
-    	Log.d("voice", Integer.toString(voiced));
     	if (voiced <= thresholdBuffer) {
+    		Log.d("voice", Integer.toStirng(voiced));
     		sendSpeechStatusToUI(1);
     	} else {
     		sendSpeechStatusToUI(0);

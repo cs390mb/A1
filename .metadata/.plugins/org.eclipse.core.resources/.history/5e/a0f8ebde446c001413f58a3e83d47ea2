@@ -83,7 +83,7 @@ public class ContextActivity extends ListActivity {
 	private GraphViewSeries x, y, z;
 	private String w, s, j;
 	private int counter = 151;
-	private boolean created, createdBar, createdVoice = false;
+	private boolean created, createdBar = false;
 	private TextView textViewx1 = null;
 	private double walking, stationary, jumping = 0;
 	private GraphViewSeries barGraphSeries;
@@ -383,38 +383,6 @@ public class ContextActivity extends ListActivity {
 			case VOICE:
 				View view5 = this.getWindow().getDecorView();
 				view5.setBackgroundColor(Color.BLACK);
-				
-				if (!createdVoice) {
-					// init example series data
-					barGraphSeries = new GraphViewSeries(new GraphViewData[] {
-							new GraphViewData(1, 0)
-							, new GraphViewData(2, 0)
-					});
-					barGraphView = new BarGraphView(
-							this // context
-							, "Activity Percentage Data" // heading
-							);
-					createdVoice = true;
-				}
-				setBars();
-				barGraphView.setY(400);
-				// Get screen size
-				Display display5 = getWindowManager().getDefaultDisplay();
-				Point size5 = new Point();
-				display5.getSize(size5);
-				int width5 = size5.x;
-				int height5 = size5.y;
-				barGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.YELLOW);
-				barGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.RED);
-				barGraphView.setManualYAxisBounds(50, 0);
-				String[] labels5 = new String[3];
-				labels5[0] = "Speech";
-				labels5[1] = "!Speech";
-				barGraphView.setHorizontalLabels(labels5);
-				barGraphView.setLayoutParams(new LayoutParams(width5, height5/4));
-				((ViewGroup) view5).addView(barGraphView);
-
-				break;
 			case PERCENTAGEBAR:
 				if (Context_Service.accy_history == null) 
 					Context_Service.accy_history = new LinkedList<Float>();

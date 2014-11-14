@@ -118,7 +118,6 @@ public class MainActivity extends Activity {
 					recordButton.setChecked(true);
 					recordStarted = true;
 					statusMicView.setText("Microphone Started");
-					statusSpeechView.setText(""+msg.arg1);
 				}
 				break;
 			}
