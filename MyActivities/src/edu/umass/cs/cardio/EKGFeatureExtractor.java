@@ -79,6 +79,56 @@ public class EKGFeatureExtractor {
 	 * of each peak...
 	 */
 	private double computeRRInterval(Double values[]){
+		/**
+		 * The following code is just detectSteps, for "inspiration"
+		 */
+		/*
+		int steps = 0;
+		if (currentFrame < windowSize) {
+			//stores our x,y,z values in our array, adds our new value to our 
+			//running aggregate, and increments our frame counter
+			positionalData[currentFrame] = Math.sqrt(Math.pow(filt_acc_x, 2) +
+					Math.pow(filt_acc_y, 2) + Math.pow(filt_acc_z, 2));
+			currentFrame++;
+		}
+		else {
+			//Once we’ve collected enough data to fill our window, we can now 
+			//compute values. We will first compute our threshold by dividing 
+			//our thresholdNumerator by windowSize. Then we can step through the 
+			//list, checking to see if our data points cross the threshold 
+			//(and also have a negative slope from point to point). There should 
+			//also be a periodicity filter (steps can’t be too close together).
+			
+			//compute max and min
+			double min = positionalData[0];
+			double max = positionalData[0];
+			for(int i = 1; i < positionalData.length; i++) {
+				if(positionalData[i] <= min)
+					min = positionalData[i];
+				else if(positionalData[i] > max)
+					max = positionalData[i];
+			}
+			
+			//compute threshold and count steps!
+			threshold = max - ((max-min)/2);
+			double restrictMaxMin = max - min;
+			if ((threshold > 6) && (threshold < 12) && (restrictMaxMin > 1)) {
+				for(int i = 1; i< positionalData.length; i++){
+						// don't count a step if we are inside the frame period
+						if (periodFrameCounter < minFramePeriod) 
+							periodFrameCounter++;
+						// if data crosses threshold on negative slope
+						else if (positionalData[i-1] > threshold && positionalData[i] <= threshold)	{
+							steps++;
+							periodFrameCounter = 0;			
+						}
+				}
+			}
+			//reset frame
+			currentFrame = 0;
+		}
+		return steps;
+		*/
 		return 0.0;
 	}
 	
@@ -111,7 +161,7 @@ public class EKGFeatureExtractor {
 		/**
 		 * Following code is directly from ActivityFeatureExtractor
 		 */
-		/*String accelFile = inputDir+"/accel.csv";
+		String cardioFile = inputDir+"/cardio.csv";
 		String emaFile = inputDir+"/ema.csv";
 		String mergeFile = inputDir+"/merge.csv";
 
@@ -178,7 +228,7 @@ public class EKGFeatureExtractor {
 
 		try{
 			// Now read and write merged file
-			BufferedReader br = new BufferedReader(new FileReader(accelFile));
+			BufferedReader br = new BufferedReader(new FileReader(cardioFile));
 			BufferedWriter bw = new BufferedWriter(new FileWriter(mergeFile));
 			System.out.println("Writing Merged File: "+mergeFile);
 			int cIndex = 0;
@@ -215,8 +265,7 @@ public class EKGFeatureExtractor {
 			e.printStackTrace();
 		}
 		return activities;
-		*/
-		return null;
+		
 	}
 	
 	/*
@@ -228,8 +277,9 @@ public class EKGFeatureExtractor {
 		/**
 		 * Following code is directly from ActivityFeatureExtractor
 		 */
-		/*String arffFile = inputDir+"/activity-data.arff";
+		String arffFile = inputDir+"/activity-data.arff";
 		String mergeFile = inputDir+"/merge.csv";
+		//TODO: change the feature names content.
 		String featureNames[] = {"xMean","xDev","xCrossRate","xFFT1","xFFT2","xFFT3","xFFT4","xVelocityChange",
 				"xDistance","yMean","yDev","yCrossRate","yFFT1","yFFT2","yFFT3","yFFT4","yVelocityChange",
 				"yDistance","zMean","zDev","zCrossRate","zFFT1","zFFT2","zFFT3","zFFT4","zVelocityChange",
@@ -261,13 +311,21 @@ public class EKGFeatureExtractor {
 			String lastActivity = null;
 			while((s=br.readLine())!=null) {
 				String tokens[] = s.split(",");
-				long time = Long.parseLong(tokens[0]);
-				double acc_x = Double.parseDouble(tokens[1]);
-				double acc_y = Double.parseDouble(tokens[2]);
-				double acc_z = Double.parseDouble(tokens[3]);
+				/*
+				 * [1] = date (string)
+				 * [2] = time: 13:05.3 format (string)
+				 * [3] = EKG value (int or double should work)
+				 * [4] = label (string)
+				 */
+				String date = tokens[0];
+				long time = parseTime(tokens[1]);
+				double EKG = Double.parseDouble(tokens[2]);
+				String activityLabel = tokens[3];
 				String activity = tokens[4].trim();
-				double ort[] = roa.getReorientedValues(acc_x, acc_y, acc_z);
-				Double features[] = extractFeatures(time, ort[0], ort[1], ort[2], acc_x, acc_y, acc_z);
+				//double ort[] = roa.getReorientedValues(acc_x, acc_y, acc_z);
+				//Double features[] = extractFeatures(time, ort[0], ort[1], ort[2], acc_x, acc_y, acc_z);
+				Double features[] = extractFeatures(time,EKG);
+				//have not changed implementation from this point onwards in method
 				if(features!=null) {
 					String featureVector = "";
 					for(int i=0;i<features.length;i++)
@@ -284,9 +342,31 @@ public class EKGFeatureExtractor {
 			System.out.println("Successfully generated Arff File:"+arffFile);
 		} catch(IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
+	/**
+	 * Method that converts the time from CSV to milliseconds
+	 * @param timeString
+	 * @return
+	 */
+	private long parseTime(String timeString){
+		//char[] time = timeString.toCharArray();
+		long minutes = 0;
+		long seconds = 0;
+		long secFraction = 0;
+		long millisec = 0;
+		int colonIndex = timeString.indexOf(":");
+		int periodIndex = timeString.indexOf(".");
+		
+		minutes = Long.parseLong(timeString.substring(0,colonIndex-1));
+		seconds = Long.parseLong(timeString.substring(colonIndex+1,periodIndex-1));
+		secFraction = Long.parseLong(timeString.substring(periodIndex+1));
+		
+		//overall time in milliseconds
+		millisec = (minutes * 60000) + (seconds * 1000) + (secFraction * 100);
+		return millisec;
+	}
 	//same as ActivityFeatureExtractor
 	public void processFiles(String inputDir){
 		HashSet<String> activities = mergeFiles(inputDir);
