@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -73,7 +74,7 @@ public class EKGFeatureExtractor {
 	}
 	
 	//compute RR-interval
-	//the current “frame” of data in our window
+	//the current â€œframeâ€� of data in our window
 	private int currentFrame = 0;
 
 	//the number of frames in our window
@@ -83,10 +84,10 @@ public class EKGFeatureExtractor {
 	
 	private int periodFrameCounter = minFramePeriod;
 
-	//array that holds each frame’s positional data: ECG
+	//array that holds each frameâ€™s positional data: ECG
 	private double positionalData[] = new double[windowSize];
 	//array that holds each fram's time data
-	private double timeData[] = new double[windowSize];
+	private long timeData[] = new long[windowSize];
 
 	//our threshold value
 	private double threshold = 0;
@@ -97,12 +98,13 @@ public class EKGFeatureExtractor {
 	 * of each peak...
 	 */
 	
-	private double[] computeRRInterval(Double[] times, Double values[]){
+	private long[] computeRRInterval(long[] times, Double values[]){
 		//array to hold the time of each R peak
-		double[] rTimes = new double[times.length];
+		ArrayList<Long> rTimes = new ArrayList<Long>();
 		int tIndex = 0;
 		int vIndex = 0;
 		int rIndex = 0;
+		
 		//fill the window
 		if(currentFrame < windowSize) {
 			timeData[currentFrame] = times[tIndex];
@@ -130,7 +132,7 @@ public class EKGFeatureExtractor {
 					periodFrameCounter++;
 				// if data crosses threshold on negative slope
 				else if (positionalData[i-1] > threshold && positionalData[i] <= threshold)	{
-					rTimes[rIndex] = timeData[i];
+					rTimes.add(timeData[i]);
 					rIndex++;
 					periodFrameCounter = 0;			
 				}
@@ -138,60 +140,15 @@ public class EKGFeatureExtractor {
 			//reset frame
 			currentFrame = 0;
 		}
+		//now time to calculate the RR intervals. size of RRintervals is n-1 compared to n R-peaks
+		long[] RRintervals = new long[rIndex-1];
+		int rTimesIndex = 1;
+		for(int i = 0; i<RRintervals.length; i++){
+			RRintervals[i] = rTimes.get(rTimesIndex) - rTimes.get(rTimesIndex - 1);
+			rTimesIndex++;
+		}
 		//return
-		return rTimes;
-		
-		/**
-		 * The following code is just detectSteps, for "inspiration"
-		 */
-		/*
-		int steps = 0;
-		if (currentFrame < windowSize) {
-			//stores our x,y,z values in our array, adds our new value to our 
-			//running aggregate, and increments our frame counter
-			positionalData[currentFrame] = Math.sqrt(Math.pow(filt_acc_x, 2) +
-					Math.pow(filt_acc_y, 2) + Math.pow(filt_acc_z, 2));
-			currentFrame++;
-		}
-		else {
-			//Once we�ve collected enough data to fill our window, we can now 
-			//compute values. We will first compute our threshold by dividing 
-			//our thresholdNumerator by windowSize. Then we can step through the 
-			//list, checking to see if our data points cross the threshold 
-			//(and also have a negative slope from point to point). There should 
-			//also be a periodicity filter (steps can�t be too close together).
-			
-			//compute max and min
-			double min = positionalData[0];
-			double max = positionalData[0];
-			for(int i = 1; i < positionalData.length; i++) {
-				if(positionalData[i] <= min)
-					min = positionalData[i];
-				else if(positionalData[i] > max)
-					max = positionalData[i];
-			}
-			
-			//compute threshold and count steps!
-			threshold = max - ((max-min)/2);
-			double restrictMaxMin = max - min;
-			if ((threshold > 6) && (threshold < 12) && (restrictMaxMin > 1)) {
-				for(int i = 1; i< positionalData.length; i++){
-						// don't count a step if we are inside the frame period
-						if (periodFrameCounter < minFramePeriod) 
-							periodFrameCounter++;
-						// if data crosses threshold on negative slope
-						else if (positionalData[i-1] > threshold && positionalData[i] <= threshold)	{
-							steps++;
-							periodFrameCounter = 0;			
-						}
-				}
-			}
-			//reset frame
-			currentFrame = 0;
-		}
-		return steps;
-		*/
-		//return 0.0;
+		return RRintervals;
 	}
 	
 	/**
