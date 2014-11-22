@@ -42,7 +42,7 @@ public class EKGFeatureExtractor {
 	 * This approach may be simplified since we are dealing with less robust feature set, and only
 	 * one stream of data. Will see...
 	 */
-	public Double[] extractFeatures(long timestamp, double cardioValue){
+	public long[] extractFeatures(long timestamp, double cardioValue){
 		addTime(timestamp);
 		addValues(cardioValue);
 		lastCardioValue = cardioValue;
@@ -57,7 +57,7 @@ public class EKGFeatureExtractor {
 	}
 	
 	//extract features over a window
-	private Double[] extractFeatures(){
+	private long[] extractFeatures(){
 		//we only have one feature we care about: RR-distance, so no need for the giant array
 		Double[] features = new Double[1];
 		for(int i=0; i<features.length; i++)
@@ -70,7 +70,7 @@ public class EKGFeatureExtractor {
 		//features of cardioVector
 		Double[] values = cardioVector.toArray(new Double[0]);
 		
-		return null;
+		return computeRRInterval(times, values);
 	}
 	
 	//compute RR-interval
@@ -98,7 +98,7 @@ public class EKGFeatureExtractor {
 	 * of each peak...
 	 */
 	
-	private long[] computeRRInterval(long[] times, Double values[]){
+	private long[] computeRRInterval(Long[] times, Double values[]){
 		//array to hold the time of each R peak
 		ArrayList<Long> rTimes = new ArrayList<Long>();
 		int tIndex = 0;
@@ -344,7 +344,7 @@ public class EKGFeatureExtractor {
 				String activity = tokens[4].trim();
 				//double ort[] = roa.getReorientedValues(acc_x, acc_y, acc_z);
 				//Double features[] = extractFeatures(time, ort[0], ort[1], ort[2], acc_x, acc_y, acc_z);
-				Double features[] = extractFeatures(time,EKG);
+				long[] features = extractFeatures(time,EKG);
 				//have not changed implementation from this point onwards in method
 				if(features!=null) {
 					String featureVector = "";
