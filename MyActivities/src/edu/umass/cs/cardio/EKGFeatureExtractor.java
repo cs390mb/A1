@@ -73,12 +73,74 @@ public class EKGFeatureExtractor {
 	}
 	
 	//compute RR-interval
+	//the current ‚Äúframe‚Äù of data in our window
+	private int currentFrame = 0;
+
+	//the number of frames in our window
+	private int windowSize = 100;
+	
+	private int minFramePeriod = 50;
+	
+	private int periodFrameCounter = minFramePeriod;
+
+	//array that holds each frame‚Äôs positional data: ECG
+	private double positionalData[] = new double[windowSize];
+	//array that holds each fram's time data
+	private double timeData[] = new double[windowSize];
+
+	//our threshold value
+	private double threshold = 0;
+	
 	/*
 	 * TODO: modify our detectSteps algorithm from Context_Service to detect R and then the time between each one
 	 * Our detect steps algorithm only increments a counter when it passes the test, except we need to figure out the time
 	 * of each peak...
 	 */
-	private double computeRRInterval(Double values[]){
+	
+	private double[] computeRRInterval(Double[] times, Double values[]){
+		//array to hold the time of each R peak
+		double[] rTimes = new double[times.length];
+		int tIndex = 0;
+		int vIndex = 0;
+		int rIndex = 0;
+		//fill the window
+		if(currentFrame < windowSize) {
+			timeData[currentFrame] = times[tIndex];
+			positionalData[currentFrame] = values[vIndex];
+			currentFrame++;
+			tIndex++;
+			vIndex++;
+		}
+		else {
+			//compute max and min of positional data
+			double min = positionalData[0];
+			double max = positionalData[0];
+			for(int i = 1; i < positionalData.length; i++) {
+				if(positionalData[i] <= min)
+					min = positionalData[i];
+				else if(positionalData[i] > max)
+					max = positionalData[i];
+			}
+			//compute threshold, 3/4 the way towards max
+			threshold = max - ((max-min/4)*3);
+			//check where data crosses threshold
+			for(int i = 1; i< positionalData.length; i++){
+				// don't count an R peak if we are inside the frame period
+				if (periodFrameCounter < minFramePeriod) 
+					periodFrameCounter++;
+				// if data crosses threshold on negative slope
+				else if (positionalData[i-1] > threshold && positionalData[i] <= threshold)	{
+					rTimes[rIndex] = timeData[i];
+					rIndex++;
+					periodFrameCounter = 0;			
+				}
+			}
+			//reset frame
+			currentFrame = 0;
+		}
+		//return
+		return rTimes;
+		
 		/**
 		 * The following code is just detectSteps, for "inspiration"
 		 */
@@ -92,12 +154,12 @@ public class EKGFeatureExtractor {
 			currentFrame++;
 		}
 		else {
-			//Once weíve collected enough data to fill our window, we can now 
+			//Once weÔøΩve collected enough data to fill our window, we can now 
 			//compute values. We will first compute our threshold by dividing 
 			//our thresholdNumerator by windowSize. Then we can step through the 
 			//list, checking to see if our data points cross the threshold 
 			//(and also have a negative slope from point to point). There should 
-			//also be a periodicity filter (steps canít be too close together).
+			//also be a periodicity filter (steps canÔøΩt be too close together).
 			
 			//compute max and min
 			double min = positionalData[0];
@@ -129,7 +191,7 @@ public class EKGFeatureExtractor {
 		}
 		return steps;
 		*/
-		return 0.0;
+		//return 0.0;
 	}
 	
 	/**
@@ -280,20 +342,21 @@ public class EKGFeatureExtractor {
 		String arffFile = inputDir+"/activity-data.arff";
 		String mergeFile = inputDir+"/merge.csv";
 		//TODO: change the feature names content.
-		String featureNames[] = {"xMean","xDev","xCrossRate","xFFT1","xFFT2","xFFT3","xFFT4","xVelocityChange",
-				"xDistance","yMean","yDev","yCrossRate","yFFT1","yFFT2","yFFT3","yFFT4","yVelocityChange",
-				"yDistance","zMean","zDev","zCrossRate","zFFT1","zFFT2","zFFT3","zFFT4","zVelocityChange",
-				"zDistance","speedMean","speedDev","speedCrossRate","speedFFT1","speedFFT2","speedFFT3",
-				"energyMean","energyDev","energyCrossRate","energyFFT1","energyFFT2","energyFFT3","energyFFT4",
-				"energyXYMean","energyXYDev","energyXYCrossRate"};
+//		String featureNames[] = {"xMean","xDev","xCrossRate","xFFT1","xFFT2","xFFT3","xFFT4","xVelocityChange",
+//				"xDistance","yMean","yDev","yCrossRate","yFFT1","yFFT2","yFFT3","yFFT4","yVelocityChange",
+//				"yDistance","zMean","zDev","zCrossRate","zFFT1","zFFT2","zFFT3","zFFT4","zVelocityChange",
+//				"zDistance","speedMean","speedDev","speedCrossRate","speedFFT1","speedFFT2","speedFFT3",
+//				"energyMean","energyDev","energyCrossRate","energyFFT1","energyFFT2","energyFFT3","energyFFT4",
+//				"energyXYMean","energyXYDev","energyXYCrossRate"};
+		String featureNames[] = {"RR"};
 		
 		try{
-			ReorientAxis roa = new ReorientAxis();
+			//ReorientAxis roa = new ReorientAxis();
 			BufferedReader br = new BufferedReader(new FileReader(mergeFile));
 			BufferedWriter bw = new BufferedWriter(new FileWriter(arffFile));
 			
 			//First write the header information
-			bw.write("@relation activity\n");
+			bw.write("@relation exercise\n");
 			for(int i=0;i<featureNames.length;i++)
 				bw.write("@attribute "+featureNames[i]+" NUMERIC \n");
 			String classes = "";
